@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>PORTA ARCHITECTURAL DOORS — Full Specification Catalog</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+  <style>
+    @layer base {
+      html, body { margin:0; padding:0; }
+    }
+    ::-webkit-scrollbar { display:none; }
+    
+    /* Spec List Drawer */
+    .spec-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .spec-drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .spec-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      z-index: 101;
+      box-shadow: -8px 0 32px rgba(0,0,0,0.12);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .spec-drawer.open {
+      transform: translateX(0);
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f9f9f8",
+            "surface-bright": "#f9f9f8",
+            "surface-low": "#f3f4f3",
+            "surface-container": "#eeeeed",
+            "surface-container-high": "#e8e8e7",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1a1c1c",
+            "on-surface-variant": "#444748",
+            "primary": "#000000",
+            "on-primary": "#ffffff",
+            "secondary": "#5e5e5e",
+            "outline": "#747878"
+          },
+          fontFamily: {
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "label-lg": ["Space Grotesk", "sans-serif"],
+            "label-md": ["Space Grotesk", "sans-serif"],
+            "label-sm": ["Space Grotesk", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"]
+          },
+          spacing: {
+            "margin": "2.5rem",
+            "gutter": "1.5rem"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased">
+
+  <!-- HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-20 w-full px-margin flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-6 h-8 border-2 border-primary relative">
+            <span class="absolute right-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary rounded-full"></span>
+          </div>
+          <span class="font-headline-md tracking-tight text-primary uppercase font-medium">PORTA</span>
+        </a>
+        <span class="text-secondary font-label-sm text-xs uppercase tracking-widest pl-2 border-l border-surface-container">Catalog Directory</span>
+      </div>
+
+      <nav class="hidden xl:flex items-center gap-8">
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="index.html#systems">Door Systems</a>
+        <a class="font-label-lg text-xs uppercase text-primary font-bold transition-colors tracking-widest" href="catalog.html">Collections</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="index.html#new-arrivals">New Arrivals</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="index.html#bestsellers">Favorites</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="index.html#projects">Projects</a>
+      </nav>
+
+      <div class="flex items-center gap-4">
+        <button onclick="toggleSpecDrawer(true)" class="font-label-md text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1.5 tracking-wider">
+          <span>Specification List</span>
+          <span class="font-label-sm text-primary font-mono font-bold" id="spec-list-counter">[ 0 ]</span>
+        </button>
+
+        <a class="inline-flex items-center justify-center bg-primary text-on-primary font-label-md text-xs uppercase px-4 py-2 hover:bg-surface-container-high hover:text-primary transition-colors tracking-widest" href="index.html#inquiry">
+          Trade Inquiry
+        </a>
+
+        <a href="../admin/index.html" title="PORTA CMS Portal" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:bg-surface-container-high hover:text-primary transition-colors">
+          <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- NOTIFICATION TOAST -->
+  <div class="fixed bottom-8 right-8 z-50 bg-primary text-on-primary px-4 py-3 font-label-md text-xs uppercase tracking-widest shadow-xl transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none flex items-center gap-2" id="spec-toast">
+    <span class="material-symbols-outlined text-[16px] text-surface-bright">check_circle</span>
+    <span id="toast-message">Added to Spec List</span>
+  </div>
+
+  <main class="w-full pt-28 pb-20 px-margin">
+    
+    <!-- Title & Description -->
+    <div class="mb-10 max-w-4xl">
+      <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary">Architectural Archive / 2025</span>
+      <h1 class="font-headline-lg text-3xl lg:text-4xl uppercase text-primary tracking-tight mt-1">
+        Monolithic Door Catalog
+      </h1>
+      <p class="font-body-md text-sm text-on-surface-variant mt-2 leading-relaxed">
+        Browse our specification portfolio of flush concealed swinging, cavity pocket, surface barn, and panoramic acoustic glass systems engineered across Milan and Germany.
+      </p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="bg-surface-container-lowest p-6 border border-surface-container mb-10 flex flex-wrap items-center gap-4 shadow-sm">
+      <input type="text" id="cat-search" placeholder="Search door model, finish, or spec..." class="bg-surface-low px-4 py-2.5 text-sm font-body-md text-on-surface outline-none border border-surface-container min-w-[240px] flex-1"/>
+
+      <select id="cat-filter-brand" class="bg-surface-low px-4 py-2.5 text-xs font-label-sm uppercase tracking-wider text-on-surface outline-none border border-surface-container">
+        <option value="all">All Brands</option>
+      </select>
+
+      <select id="cat-filter-category" class="bg-surface-low px-4 py-2.5 text-xs font-label-sm uppercase tracking-wider text-on-surface outline-none border border-surface-container">
+        <option value="all">All Categories</option>
+      </select>
+
+      <select id="cat-filter-system" class="bg-surface-low px-4 py-2.5 text-xs font-label-sm uppercase tracking-wider text-on-surface outline-none border border-surface-container">
+        <option value="all">All 8 Systems</option>
+      </select>
+
+      <select id="cat-filter-tag" class="bg-surface-low px-4 py-2.5 text-xs font-label-sm uppercase tracking-wider text-on-surface outline-none border border-surface-container">
+        <option value="all">All Tags</option>
+        <option value="New Arrival">New Arrivals</option>
+        <option value="Best Seller">Best Sellers</option>
+      </select>
+
+      <button onclick="resetCatalogFilters()" class="text-xs uppercase font-label-sm tracking-wider text-secondary hover:text-primary px-2">
+        Reset
+      </button>
+    </div>
+
+    <!-- Doors Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-gutter" id="catalog-grid"></div>
+  </main>
+
+  <!-- ================= SLIDE-OUT SPECIFICATION LIST DRAWER ================= -->
+  <div class="spec-drawer-backdrop" id="drawer-backdrop" onclick="toggleSpecDrawer(false)"></div>
+  <aside class="spec-drawer" id="spec-drawer">
+    <div class="p-6 border-b border-surface-container flex items-center justify-between">
+      <div>
+        <h3 class="font-headline-md text-base uppercase text-primary">Specification Schedule</h3>
+        <p class="font-body-sm text-xs text-secondary mt-0.5" id="drawer-item-count">0 door models selected</p>
+      </div>
+      <button onclick="toggleSpecDrawer(false)" class="text-secondary hover:text-primary p-2">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-6 space-y-4" id="drawer-items-container"></div>
+
+    <div class="p-6 border-t border-surface-container bg-surface-low space-y-4">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-xs uppercase tracking-widest text-secondary">Estimated Schedule Value</span>
+        <span class="font-headline-md text-lg text-primary" id="drawer-total-val">$0.00</span>
+      </div>
+      <div class="flex flex-col gap-2">
+        <a href="index.html#inquiry" onclick="toggleSpecDrawer(false)" class="w-full bg-primary text-on-primary py-3.5 text-center font-label-md text-xs uppercase tracking-widest hover:bg-surface-container-high hover:text-primary transition-colors">
+          Submit Spec Schedule
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <script type="module" src="js/catalog.js"></script>
+</body>
+</html>

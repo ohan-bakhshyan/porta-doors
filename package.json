@@ -1,0 +1,19 @@
+{
+  "name": "doors-los-angeles-platform",
+  "version": "1.0.0",
+  "description": "Modern Architectural Doors Catalog & CMS Platform",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "doors",
+    "catalog",
+    "cms",
+    "admin-panel",
+    "frameless-doors"
+  ],
+  "author": "",
+  "license": "ISC"
+}

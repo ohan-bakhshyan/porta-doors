@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>PORTA ARCHITECTURAL DOORS — Minimalist Showroom & Specification CMS</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  
+  <style>
+    @layer base {
+      html, body { margin:0; padding:0; }
+      body { overscroll-behavior:none; }
+    }
+    ::-webkit-scrollbar { display:none; }
+    
+    /* Spec List Drawer */
+    .spec-drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .spec-drawer-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .spec-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      z-index: 101;
+      box-shadow: -8px 0 32px rgba(0,0,0,0.12);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .spec-drawer.open {
+      transform: translateX(0);
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#f9f9f8",
+            "surface-bright": "#f9f9f8",
+            "surface-low": "#f3f4f3",
+            "surface-container": "#eeeeed",
+            "surface-container-high": "#e8e8e7",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1a1c1c",
+            "on-surface-variant": "#444748",
+            "primary": "#000000",
+            "on-primary": "#ffffff",
+            "secondary": "#5e5e5e",
+            "outline": "#747878",
+            "outline-variant": "#c4c7c7"
+          },
+          fontFamily: {
+            "display-lg": ["Space Grotesk", "sans-serif"],
+            "headline-lg": ["Space Grotesk", "sans-serif"],
+            "headline-md": ["Space Grotesk", "sans-serif"],
+            "label-lg": ["Space Grotesk", "sans-serif"],
+            "label-md": ["Space Grotesk", "sans-serif"],
+            "label-sm": ["Space Grotesk", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"]
+          },
+          spacing: {
+            "space-xs": "0.25rem",
+            "space-sm": "0.5rem",
+            "space-md": "1rem",
+            "space-lg": "2rem",
+            "space-xl": "4rem",
+            "gutter": "1.5rem",
+            "margin": "2.5rem"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface antialiased selection:bg-primary selection:text-on-primary">
+
+  <!-- TOP ARCHITECTURAL HEADER -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-20 w-full px-margin flex items-center justify-between">
+      
+      <!-- Brand Mark -->
+      <div class="flex items-center gap-space-md">
+        <a href="index.html" class="flex items-center gap-3">
+          <div class="w-6 h-8 border-2 border-primary relative">
+            <span class="absolute right-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-primary rounded-full"></span>
+          </div>
+          <span class="font-headline-md tracking-tight text-primary uppercase font-medium" id="header-brand-title">PORTA</span>
+        </a>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="hidden xl:flex items-center gap-space-lg">
+        <a class="uppercase transition-colors text-primary font-bold text-xs tracking-widest" href="#systems">Door Systems</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="catalog.html">Collections</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="#new-arrivals">New Arrivals</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="#bestsellers">Favorites</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="#projects">Projects</a>
+        <a class="font-label-lg text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors tracking-widest" href="#inquiry">Trade Inquiry</a>
+      </nav>
+
+      <!-- Right Actions: Phone, Spec List Drawer Trigger, Admin CMS -->
+      <div class="flex items-center gap-space-md">
+        <a class="hidden md:inline-block font-label-md text-xs text-on-surface-variant hover:text-on-surface transition-colors tracking-wider" id="header-phone" href="tel:+18009427678">+1 (800) 942-7678</a>
+        <span class="hidden md:inline-block w-px h-4 bg-surface-container-high"></span>
+        
+        <!-- Spec List Drawer Button -->
+        <button onclick="toggleSpecDrawer(true)" class="font-label-md text-xs uppercase text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1.5 tracking-wider">
+          <span>Specification List</span>
+          <span class="font-label-sm text-primary font-mono font-bold" id="spec-list-counter">[ 0 ]</span>
+        </button>
+
+        <a class="hidden sm:inline-flex items-center justify-center bg-primary text-on-primary font-label-md text-xs uppercase px-space-md py-space-sm hover:bg-surface-container-high hover:text-primary transition-colors tracking-widest" href="#inquiry">
+          Request Quote
+        </a>
+
+        <!-- Admin Portal Icon Link -->
+        <a href="../admin/index.html" title="PORTA CMS Portal" class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary hover:bg-surface-container-high hover:text-primary transition-colors">
+          <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- NOTIFICATION TOAST -->
+  <div class="fixed bottom-8 right-8 z-50 bg-primary text-on-primary px-space-md py-space-sm font-label-md text-xs uppercase tracking-widest shadow-xl transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none flex items-center gap-space-sm" id="spec-toast">
+    <span class="material-symbols-outlined text-[16px] text-surface-bright">check_circle</span>
+    <span id="toast-message">Added to Specification Schedule</span>
+  </div>
+
+  <main class="w-full pt-20 bg-surface min-h-screen">
+    
+    <!-- 1. HERO SECTION (Dynamic from Settings) -->
+    <section class="relative w-full overflow-hidden bg-surface-container-lowest" id="hero-section">
+      <div class="grid grid-cols-1 lg:grid-cols-12 min-h-[942px]">
+        
+        <!-- Left Image Column -->
+        <div class="lg:col-span-7 relative min-h-[460px] lg:min-h-full overflow-hidden bg-surface-container">
+          <img id="hero-image" class="w-full h-full object-cover object-center grayscale-[15%] contrast-[1.05]" src="" alt="PORTA Architectural Portal"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-primary/40 via-transparent to-transparent lg:hidden"></div>
+          <div class="absolute bottom-6 left-6 right-6 lg:bottom-10 lg:left-10 lg:right-auto flex items-center gap-space-sm bg-surface/90 backdrop-blur-md px-space-md py-space-xs text-on-surface shadow-sm">
+            <span class="w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+            <span class="font-label-sm text-[11px] uppercase tracking-widest text-on-surface" id="hero-model-badge">Model: Monolith Flush Pivot 00 — Board-Formed Concrete</span>
+          </div>
+        </div>
+
+        <!-- Right Content Column -->
+        <div class="lg:col-span-5 flex flex-col justify-between p-8 lg:p-14 xl:p-16 bg-surface-container-lowest">
+          <div class="space-y-space-md">
+            <div class="flex items-center gap-space-xs text-secondary font-label-sm text-xs uppercase tracking-widest" id="hero-directive">
+              <span>Engineering Directive</span>
+              <span>/</span>
+              <span>Zurich • Milan • NYC</span>
+            </div>
+            <h1 class="font-headline-lg text-3xl lg:text-[2.75rem] lg:leading-[3.15rem] tracking-tight uppercase text-primary font-light" id="hero-headline">
+              Invisible Boundaries. Flush Doors Engineered with European Precision.
+            </h1>
+            <p class="font-body-lg text-base lg:text-lg text-on-surface-variant font-light leading-relaxed pt-2" id="hero-subheadline">
+              Frameless acoustic door leaves, concealed magnetic latches, and sub-millimeter architectural shadow gaps for transcendent living spaces.
+            </p>
+          </div>
+
+          <div class="space-y-space-lg pt-8 lg:pt-12">
+            <!-- Metrics Pill -->
+            <div class="p-space-md bg-surface-container-low shadow-sm">
+              <div class="font-label-sm text-[10px] uppercase tracking-widest text-secondary mb-1">Standard Engineering Metrics</div>
+              <div class="font-label-md text-xs uppercase tracking-wider text-primary font-medium" id="hero-metrics-pill">
+                ISO 9001 Certified • Concealed German Hardware • Up to 12ft Floor-to-Ceiling Single Leaves
+              </div>
+            </div>
+
+            <!-- CTAs -->
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-sm">
+              <a class="inline-flex items-center justify-center bg-primary text-on-primary font-label-md text-xs uppercase px-8 py-4 tracking-widest hover:bg-surface-container-high hover:text-primary transition-colors text-center" href="catalog.html">
+                View Collections
+              </a>
+              <a class="inline-flex items-center justify-center bg-surface-container text-on-surface font-label-md text-xs uppercase px-8 py-4 tracking-widest hover:bg-primary hover:text-on-primary transition-colors text-center" href="#inquiry">
+                Request Specification
+              </a>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 font-label-sm text-[11px] text-secondary uppercase tracking-widest">
+              <span>Acoustic: Up to 46dB</span>
+              <span>Jamb: 0mm Flush Profile</span>
+              <span>Lead: 6-8 Weeks</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ARCHITECTURAL PHILOSOPHY STATEMENT -->
+    <section class="w-full py-space-xl bg-surface-container-low">
+      <div class="w-full px-margin max-w-6xl mx-auto text-center space-y-space-md">
+        <span class="font-label-sm text-xs uppercase tracking-[0.3em] text-secondary" id="philosophy-tag">Tectonic Discipline & Truth to Material</span>
+        <blockquote class="font-headline-lg text-2xl lg:text-[2.25rem] lg:leading-[3rem] text-primary font-light tracking-tight" id="philosophy-quote">
+          “A door should not interrupt an architectural plane. It should either dissolve completely into the monolith or celebrate pure material truth.”
+        </blockquote>
+        <div class="flex items-center justify-center gap-space-md pt-space-xs font-label-sm text-xs uppercase tracking-widest text-on-surface-variant" id="philosophy-author">
+          Dieter Rams & John Pawson Axiom • Aesthetic Baseline 2025
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. NEW ARRIVALS (Responsive Architectural Carousel - Up to 5 Items) -->
+    <section class="w-full py-space-xl bg-surface-bright" id="new-arrivals">
+      <div class="w-full px-margin">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg gap-4">
+          <div>
+            <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary" id="sec-arrivals-tag">01 / Mechanical Advancements</span>
+            <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1" id="sec-arrivals-title">New Arrivals</h2>
+            <p class="font-body-md text-on-surface-variant max-w-md mt-2 text-sm" id="sec-arrivals-subtitle">
+              Recent mechanical patents, motorized flush pocket assemblies, and monolithic concrete-faced door sets.
+            </p>
+          </div>
+          
+          <!-- Carousel Navigation Controls -->
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs uppercase tracking-widest text-secondary" id="arrivals-carousel-counter">01 / 05</span>
+            <div class="flex items-center gap-1.5">
+              <button id="arrivals-prev-btn" onclick="slideArrivals(-1)" class="w-10 h-10 border border-surface-container bg-surface-lowest text-primary hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Previous Arrivals">
+                <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+              </button>
+              <button id="arrivals-next-btn" onclick="slideArrivals(1)" class="w-10 h-10 border border-surface-container bg-surface-lowest text-primary hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Next Arrivals">
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Viewport & Track -->
+        <div class="overflow-hidden w-full relative">
+          <div class="flex transition-transform duration-500 ease-out -mx-3" id="arrivals-track"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. ARCHITECTURAL FAVORITES / BEST SELLERS (Responsive Architectural Carousel - Up to 5 Items) -->
+    <section class="w-full py-space-xl bg-surface-container-lowest" id="bestsellers">
+      <div class="w-full px-margin">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between pb-space-md gap-4">
+          <div>
+            <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary" id="sec-bestsellers-tag">02 / Field-Tested Specifications</span>
+            <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1" id="sec-bestsellers-title">Architectural Favorites</h2>
+          </div>
+          
+          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+            <!-- Category Filters -->
+            <div class="flex flex-wrap gap-2" id="favorites-filter-tabs">
+              <button class="filter-tab px-4 py-2 font-label-sm text-xs uppercase tracking-widest bg-primary text-on-primary transition-colors" data-filter="all" onclick="filterFavorites('all', this)">
+                All Systems
+              </button>
+              <button class="filter-tab px-4 py-2 font-label-sm text-xs uppercase tracking-widest bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors" data-filter="cat-flush-concealed" onclick="filterFavorites('cat-flush-concealed', this)">
+                Flush Concealed
+              </button>
+              <button class="filter-tab px-4 py-2 font-label-sm text-xs uppercase tracking-widest bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors" data-filter="cat-monolithic-wood" onclick="filterFavorites('cat-monolithic-wood', this)">
+                Acoustic Wood
+              </button>
+              <button class="filter-tab px-4 py-2 font-label-sm text-xs uppercase tracking-widest bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors" data-filter="cat-fluted-glass" onclick="filterFavorites('cat-fluted-glass', this)">
+                Minimal Glass
+              </button>
+            </div>
+
+            <!-- Carousel Navigation Controls -->
+            <div class="flex items-center gap-3 ml-auto sm:ml-0">
+              <span class="font-mono text-xs uppercase tracking-widest text-secondary" id="favorites-carousel-counter">01 / 05</span>
+              <div class="flex items-center gap-1.5">
+                <button id="favorites-prev-btn" onclick="slideFavorites(-1)" class="w-10 h-10 border border-surface-container bg-surface-lowest text-primary hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Previous Favorites">
+                  <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                </button>
+                <button id="favorites-next-btn" onclick="slideFavorites(1)" class="w-10 h-10 border border-surface-container bg-surface-lowest text-primary hover:bg-primary hover:text-on-primary transition-colors flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed" aria-label="Next Favorites">
+                  <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carousel Viewport & Track -->
+        <div class="overflow-hidden w-full relative pt-space-md">
+          <div class="flex transition-transform duration-500 ease-out -mx-3" id="favorites-track"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. DOOR SYSTEMS DIRECTORY (Strict 8 Mechanical Systems) -->
+    <section class="w-full py-space-xl bg-surface-bright" id="systems">
+      <div class="w-full px-margin">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg">
+          <div>
+            <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary">03 / Mechanical Typologies</span>
+            <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1" id="sec-systems-title">Door Systems Directory</h2>
+          </div>
+          <p class="font-body-md text-on-surface-variant max-w-md mt-2 md:mt-0 text-sm">
+            Precision engineered opening typologies for seamless spatial choreography and perimeter zero-tolerance jambs.
+          </p>
+        </div>
+
+        <!-- 4x2 Grid of 8 Systems -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter" id="systems-grid"></div>
+      </div>
+    </section>
+
+    <!-- 6. COMPLETED PROJECTS & CASE STUDIES -->
+    <section class="w-full py-space-xl bg-surface-container-lowest" id="projects">
+      <div class="w-full px-margin">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-lg">
+          <div>
+            <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary">04 / Built Architecture</span>
+            <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1" id="sec-projects-title">Global Case Studies</h2>
+          </div>
+          <p class="font-body-md text-on-surface-variant max-w-md mt-2 md:mt-0 text-sm">
+            Uncompromised architectural visions realised alongside international practices and Master Builders.
+          </p>
+        </div>
+
+        <div class="space-y-space-xl" id="projects-stack"></div>
+      </div>
+    </section>
+
+    <!-- 7. INTERACTIVE SPECIFICATION / TRADE INQUIRY FORM -->
+    <section class="w-full py-space-xl bg-surface-bright" id="inquiry">
+      <div class="w-full px-margin">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter bg-surface-container-lowest p-8 lg:p-16 shadow-md">
+          
+          <!-- Explanatory Column -->
+          <div class="lg:col-span-5 flex flex-col justify-between pr-0 lg:pr-8">
+            <div>
+              <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary">05 / Direct Trade Engagement</span>
+              <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1 mb-4">Trade Specification & Inquiry</h2>
+              <p class="font-body-md text-on-surface-variant leading-relaxed text-sm">
+                Dedicated technical support for Architects, Interior Designers, General Contractors, and Millwork Developers.
+              </p>
+              <p class="font-body-md text-on-surface-variant leading-relaxed mt-4 text-sm">
+                Submit your preliminary opening counts or architectural plans to receive tailored schedule pricing, custom jamb details, physical material finish samples, and direct Revit BIM library clearance within 24 business hours.
+              </p>
+
+              <div class="mt-8 space-y-4 font-label-sm text-xs uppercase tracking-wider text-on-surface">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                  <span>Sub-millimeter factory pre-assembled aluminum sub-frames</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                  <span>Dedicated architectural project engineer assigned to your project</span>
+                </div>
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+                  <span>Physical finish swatch box shipped complimentary via express courier</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-8 text-secondary font-label-sm text-xs uppercase tracking-widest">
+              Direct Trade Line: <a class="text-primary hover:underline" href="tel:+18009427678" id="inquiry-phone">+1 (800) 942-7678</a>
+            </div>
+          </div>
+
+          <!-- Form Column -->
+          <div class="lg:col-span-7 mt-8 lg:mt-0">
+            <form class="space-y-6" id="architectural-inquiry-form" onsubmit="handlePublicInquirySubmit(event)">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Project Classification *</label>
+                  <select class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface focus:outline-none focus:bg-surface-container-high transition-colors" id="inq-project-type" required>
+                    <option value="" disabled selected>Select typology...</option>
+                    <option value="High-End Residential">High-End Residential</option>
+                    <option value="Commercial Headquarters">Commercial Headquarters</option>
+                    <option value="Boutique Hospitality">Boutique Hospitality / Hotel</option>
+                    <option value="Gallery / Cultural">Gallery / Institutional Museum</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Total Openings Estimate *</label>
+                  <select class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface focus:outline-none focus:bg-surface-container-high transition-colors" id="inq-openings" required>
+                    <option value="" disabled selected>Quantity of doors...</option>
+                    <option value="1-5">1 - 5 Monolithic Portals</option>
+                    <option value="6-15">6 - 15 Complete Residence</option>
+                    <option value="16-40">16 - 40 Estate / Commercial Floor</option>
+                    <option value="40+">40+ Multi-unit / Hospitality Complex</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Systems Pills -->
+              <div class="space-y-2">
+                <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Systems of Interest (Click to select)</label>
+                <div class="flex flex-wrap gap-2" id="inq-systems-selection">
+                  <button type="button" class="spec-pill px-3 py-2 bg-surface-container text-on-surface font-label-sm text-xs uppercase tracking-wider hover:bg-surface-container-high transition-colors" onclick="togglePill(this)">Flush Concealed Swing</button>
+                  <button type="button" class="spec-pill px-3 py-2 bg-surface-container text-on-surface font-label-sm text-xs uppercase tracking-wider hover:bg-surface-container-high transition-colors" onclick="togglePill(this)">Oversized Pivot Portal</button>
+                  <button type="button" class="spec-pill px-3 py-2 bg-surface-container text-on-surface font-label-sm text-xs uppercase tracking-wider hover:bg-surface-container-high transition-colors" onclick="togglePill(this)">Cavity Pocket System</button>
+                  <button type="button" class="spec-pill px-3 py-2 bg-surface-container text-on-surface font-label-sm text-xs uppercase tracking-wider hover:bg-surface-container-high transition-colors" onclick="togglePill(this)">Reeded Glass Lumen</button>
+                  <button type="button" class="spec-pill px-3 py-2 bg-surface-container text-on-surface font-label-sm text-xs uppercase tracking-wider hover:bg-surface-container-high transition-colors" onclick="togglePill(this)">Concrete Face Veneer</button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Primary Finish Material</label>
+                  <select class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface focus:outline-none focus:bg-surface-container-high transition-colors" id="inq-finish">
+                    <option value="Smoked European Fumed Oak">Smoked European Fumed Oak</option>
+                    <option value="American Black Walnut">American Black Walnut</option>
+                    <option value="Light Grey Board Concrete">Light Grey Board-Formed Concrete</option>
+                    <option value="Fluted Reeded Glass & Obsidian Alu">Fluted Reeded Glass & Obsidian Alu</option>
+                    <option value="Primed for Field Plaster / Paint">Primed for Field Plaster / Paint</option>
+                  </select>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Project Location / City *</label>
+                  <input type="text" id="inq-location" required placeholder="e.g. Aspen, CO / London / Zurich" class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface placeholder:text-secondary/50 focus:outline-none focus:bg-surface-container-high transition-colors"/>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Architect Name & Studio *</label>
+                  <input type="text" id="inq-name" required placeholder="e.g. Maya Lin, Lin Studio" class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface placeholder:text-secondary/50 focus:outline-none focus:bg-surface-container-high transition-colors"/>
+                </div>
+
+                <div class="space-y-2">
+                  <label class="block font-label-sm text-xs uppercase tracking-wider text-secondary">Trade Email Address *</label>
+                  <input type="email" id="inq-email" required placeholder="name@architecturedesk.com" class="w-full bg-surface-container-low px-4 py-3 font-body-md text-sm text-on-surface placeholder:text-secondary/50 focus:outline-none focus:bg-surface-container-high transition-colors"/>
+                </div>
+              </div>
+
+              <!-- Attach Door Schedule -->
+              <div class="p-4 bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                  <span class="material-symbols-outlined text-secondary text-[24px]">upload_file</span>
+                  <div>
+                    <div class="font-label-sm text-xs uppercase tracking-widest text-primary font-medium">Attach Door Schedule or CAD Elevation</div>
+                    <div class="font-body-sm text-xs text-secondary">PDF, DWG, RVT, or XLS up to 50MB</div>
+                  </div>
+                </div>
+                <label class="cursor-pointer bg-surface-container-lowest text-primary px-4 py-2 font-label-sm text-xs uppercase tracking-widest hover:bg-primary hover:text-on-primary transition-colors text-center">
+                  Browse Files
+                  <input type="file" id="inq-file-input" class="hidden" onchange="handleInqFile(this)"/>
+                </label>
+              </div>
+              <div class="hidden text-secondary font-label-sm text-xs uppercase tracking-widest" id="inq-file-display"></div>
+
+              <!-- Submit -->
+              <div class="pt-2">
+                <button type="submit" class="w-full bg-primary text-on-primary py-4 font-label-md text-xs uppercase tracking-widest hover:bg-surface-container-high hover:text-primary transition-colors flex items-center justify-center gap-2">
+                  <span>Submit Architectural Request</span>
+                  <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+                </button>
+              </div>
+
+              <div class="hidden p-4 bg-surface-container text-primary font-label-sm text-xs uppercase tracking-widest text-center" id="inq-success-msg">
+                ✓ Specification request received. An architectural specialist will dispatch technical data packages within 24 hours.
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. PEER TESTIMONIALS -->
+    <section class="w-full py-space-xl bg-surface-container-low">
+      <div class="w-full px-margin">
+        <div class="mb-space-lg">
+          <span class="font-label-sm text-xs uppercase tracking-[0.25em] text-secondary">06 / Peer Recognition</span>
+          <h2 class="font-headline-lg text-2xl lg:text-3xl uppercase text-primary tracking-tight mt-1">Trade & Architect Endorsements</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter" id="testimonials-grid"></div>
+      </div>
+    </section>
+
+    <!-- 9. BIM / CAD ARCHITECTURAL RESOURCES BAR -->
+    <section class="w-full py-space-lg bg-primary text-on-primary">
+      <div class="w-full px-margin flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-md">
+        <div class="space-y-1">
+          <div class="font-label-sm text-xs uppercase tracking-[0.25em] text-surface-container-high">Engineering Resource Suite</div>
+          <h3 class="font-headline-md text-xl lg:text-2xl uppercase tracking-tight text-on-primary">
+            Complete BIM & CAD Architectural Library
+          </h3>
+          <p class="font-body-sm text-xs text-surface-container-high max-w-2xl">
+            Instant download packages including Autodesk Revit 2024 families, ArchiCAD, Vectorworks, 2D DWG section details, and Architectural MasterSpec 08 14 00 specifications.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button class="bg-surface text-primary px-6 py-4 font-label-md text-xs uppercase tracking-widest hover:bg-surface-container transition-colors flex items-center gap-2" onclick="downloadCad('Complete Architectural Library Package')">
+            <span class="material-symbols-outlined text-[18px]">folder_zip</span>
+            <span>Download All BIM & CAD (.ZIP 240MB)</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-surface-container-lowest shadow-[0_-1px_8px_rgba(0,0,0,0.02)] pt-space-xl pb-space-lg">
+    <div class="w-full px-margin grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-gutter mb-space-xl">
+      <div class="lg:col-span-4 pr-0 lg:pr-space-lg">
+        <div class="font-headline-md text-lg uppercase tracking-tight text-primary mb-space-md" id="footer-company-name">PORTA ARCHITECTURAL DOORS</div>
+        <p class="font-body-md text-xs text-on-surface-variant max-w-md leading-relaxed">
+          Engineered frameless portals and flush architectural door systems crafted in Germany and Italy for visionary residential and commercial architecture.
+        </p>
+      </div>
+
+      <div class="lg:col-span-3">
+        <div class="font-label-md text-xs uppercase tracking-widest text-primary mb-space-md">Studios & Showrooms</div>
+        <ul class="space-y-space-xs font-body-sm text-xs text-on-surface-variant" id="footer-showrooms-list">
+          <li>Milan — Via Manzoni 14</li>
+          <li>Zurich — Gotthardstrasse 26</li>
+          <li>New York — 520 West 28th St</li>
+          <li>Los Angeles — 8687 Melrose Ave</li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-2">
+        <div class="font-label-md text-xs uppercase tracking-widest text-primary mb-space-md">Technical Resources</div>
+        <ul class="space-y-space-xs font-body-sm text-xs text-on-surface-variant">
+          <li><a class="hover:text-primary transition-colors" href="catalog.html">Full Catalog</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#systems">8 Mechanical Systems</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#inquiry">CAD Elevation Sections</a></li>
+          <li><a class="hover:text-primary transition-colors" href="#inquiry">Acoustic Ratings</a></li>
+        </ul>
+      </div>
+
+      <div class="lg:col-span-3">
+        <div class="font-label-md text-xs uppercase tracking-widest text-primary mb-space-md">Trade Portal & Specifiers</div>
+        <p class="font-body-sm text-xs text-on-surface-variant mb-space-md">
+          Direct architectural access for project estimation, material swatches, and custom millwork consultation.
+        </p>
+        <div class="flex flex-col gap-2">
+          <a class="inline-flex items-center justify-center bg-primary text-on-primary font-label-md text-xs uppercase py-3 px-4 hover:bg-surface-container-high hover:text-primary transition-colors tracking-wider" href="../admin/index.html">
+            Architectural CMS Sign-In
+          </a>
+          <a class="inline-flex items-center justify-center bg-surface-container text-on-surface font-label-md text-xs uppercase py-3 px-4 hover:bg-primary hover:text-on-primary transition-colors tracking-wider" href="#inquiry">
+            Direct Consultation Booking
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="w-full px-margin pt-space-md flex flex-col md:flex-row items-start md:items-center justify-between gap-space-sm font-label-sm text-[11px] text-on-surface-variant uppercase border-t border-surface-container">
+      <p id="footer-copyright">© 2025 PORTA ARCHITECTURAL DOORS GMBH. ALL RIGHTS RESERVED.</p>
+      <div class="flex flex-wrap items-center gap-space-md">
+        <span class="text-primary font-medium" id="footer-certifications">CE & UL Certified Flush Systems</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= SLIDE-OUT SPECIFICATION LIST DRAWER ================= -->
+  <div class="spec-drawer-backdrop" id="drawer-backdrop" onclick="toggleSpecDrawer(false)"></div>
+  <aside class="spec-drawer" id="spec-drawer">
+    <div class="p-6 border-b border-surface-container flex items-center justify-between">
+      <div>
+        <h3 class="font-headline-md text-base uppercase text-primary">Specification Schedule</h3>
+        <p class="font-body-sm text-xs text-secondary mt-0.5" id="drawer-item-count">0 door models selected</p>
+      </div>
+      <button onclick="toggleSpecDrawer(false)" class="text-secondary hover:text-primary p-2">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+    </div>
+
+    <!-- Items List -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-4" id="drawer-items-container"></div>
+
+    <!-- Drawer Footer / Summary -->
+    <div class="p-6 border-t border-surface-container bg-surface-low space-y-4">
+      <div class="flex items-center justify-between">
+        <span class="font-label-sm text-xs uppercase tracking-widest text-secondary">Estimated Schedule Value</span>
+        <span class="font-headline-md text-lg text-primary" id="drawer-total-val">$0.00</span>
+      </div>
+      <p class="font-body-sm text-[11px] text-secondary">
+        * Trade pricing reflects current active promotional incentives. Final schedule quote verified upon CAD review.
+      </p>
+      <div class="flex flex-col gap-2">
+        <a href="#inquiry" onclick="toggleSpecDrawer(false)" class="w-full bg-primary text-on-primary py-3.5 text-center font-label-md text-xs uppercase tracking-widest hover:bg-surface-container-high hover:text-primary transition-colors">
+          Submit Spec Schedule
+        </a>
+        <button onclick="clearSpecSchedule()" class="w-full py-2 text-center font-label-sm text-[10px] uppercase tracking-widest text-secondary hover:text-primary">
+          Clear Specification List
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

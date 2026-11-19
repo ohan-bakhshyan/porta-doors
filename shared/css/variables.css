@@ -1,0 +1,98 @@
+/**
+ * PORTA Architectural Doors - Global Design Tokens
+ * Aligned with Google Stitch pure monochrome architectural aesthetic.
+ */
+
+:root {
+  /* Architectural Monochrome Palette */
+  --color-primary: #000000;
+  --color-primary-container: #1c1b1b;
+  --color-on-primary: #ffffff;
+  
+  --color-secondary: #5e5e5e;
+  --color-secondary-container: #e4e2e2;
+  --color-on-secondary: #ffffff;
+
+  --color-surface: #f9f9f8;
+  --color-surface-bright: #f9f9f8;
+  --color-surface-low: #f3f4f3;
+  --color-surface-container: #eeeeed;
+  --color-surface-high: #e8e8e7;
+  --color-surface-lowest: #ffffff;
+
+  --color-on-surface: #1a1c1c;
+  --color-on-surface-variant: #444748;
+  --color-outline: #747878;
+  --color-outline-variant: #c4c7c7;
+
+  /* Typography */
+  --font-display: 'Space Grotesk', -apple-system, sans-serif;
+  --font-headline: 'Space Grotesk', -apple-system, sans-serif;
+  --font-label: 'Space Grotesk', -apple-system, sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Spacing */
+  --space-xs: 0.25rem;  /* 4px */
+  --space-sm: 0.5rem;   /* 8px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 2rem;     /* 32px */
+  --space-xl: 4rem;     /* 64px */
+  --gutter: 1.5rem;     /* 24px */
+  --margin: 2.5rem;     /* 40px */
+
+  /* Borders & Shadows */
+  --border-hairline: 1px solid var(--color-surface-container);
+  --border-subtle: 1px solid var(--color-outline-variant);
+  --border-contrast: 1px solid var(--color-primary);
+
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.09);
+  --shadow-drawer: -4px 0 32px rgba(0, 0, 0, 0.12);
+
+  /* Transitions */
+  --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Universal Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-body);
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}

@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PORTA — Architectural Administration CMS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared/css/variables.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-shell">
+  <!-- Fixed Architectural Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <div class="admin-logo">
+        <span class="portal-dot"></span>
+        <span>PORTA</span> CMS
+      </div>
+      <span class="admin-version">v2.0 ARCH</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-item active" data-tab="dashboard">
+        <div class="nav-item-left">
+          <span>Overview</span>
+        </div>
+      </div>
+
+      <div class="nav-item" data-tab="doors">
+        <div class="nav-item-left">
+          <span>Doors & Specs</span>
+        </div>
+        <span class="badge-counter" id="badge-doors-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="brands">
+        <div class="nav-item-left">
+          <span>Brands</span>
+        </div>
+        <span class="badge-counter" id="badge-brands-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="categories">
+        <div class="nav-item-left">
+          <span>Categories</span>
+        </div>
+        <span class="badge-counter" id="badge-cats-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="systems">
+        <div class="nav-item-left">
+          <span>8 Systems</span>
+        </div>
+        <span class="badge-counter">8</span>
+      </div>
+
+      <div class="nav-item" data-tab="promotions">
+        <div class="nav-item-left">
+          <span>Promotions & Groups</span>
+        </div>
+        <span class="badge-counter" id="badge-promos-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="projects">
+        <div class="nav-item-left">
+          <span>Completed Projects</span>
+        </div>
+        <span class="badge-counter" id="badge-projects-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="inquiries">
+        <div class="nav-item-left">
+          <span>Spec Inquiries</span>
+        </div>
+        <span class="badge-counter" id="badge-inquiries-count">0</span>
+      </div>
+
+      <div class="nav-item" data-tab="settings">
+        <div class="nav-item-left">
+          <span>Settings & Account</span>
+        </div>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-status" id="admin-user-display">Admin: admin</div>
+      <a href="../front/index.html" target="_blank" class="btn-sidebar-link">
+        <span>View Live Showroom ↗</span>
+      </a>
+      <button class="btn-sidebar-link btn-logout" id="btn-logout">
+        <span>Sign Out</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Viewport -->
+  <main class="admin-main">
+    <header class="admin-topbar">
+      <div class="topbar-title" id="current-tab-title">Overview</div>
+      <div class="topbar-actions">
+        <span style="font-size:11px; font-family:var(--font-mono); color:var(--color-secondary);">Zurich • Milan • Los Angeles</span>
+      </div>
+    </header>
+
+    <div class="admin-body">
+
+      <!-- TAB 1: OVERVIEW -->
+      <section class="tab-pane active" id="tab-dashboard">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Architectural Showroom Metrics</h2>
+            <p class="section-desc">Real-time status of doors catalog, brand partners, specifications schedule, and incoming trade inquiries.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openDoorModal()">+ New Door Specification</button>
+        </div>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Active Doors in Showroom</span>
+            <span class="kpi-value" id="kpi-doors">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Partner Brands</span>
+            <span class="kpi-value" id="kpi-brands">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Door Categories</span>
+            <span class="kpi-value" id="kpi-categories">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Active Promotions</span>
+            <span class="kpi-value" id="kpi-promos">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Built Case Studies</span>
+            <span class="kpi-value" id="kpi-projects">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Pending Inquiries</span>
+            <span class="kpi-value" id="kpi-inquiries">0</span>
+          </div>
+        </div>
+
+        <!-- Quick Activity Logs / Recent Inquiries -->
+        <div class="section-header" style="margin-top: 32px;">
+          <div>
+            <h3 class="section-title" style="font-size: 16px;">Recent Trade Inquiries</h3>
+            <p class="section-desc">Latest submissions from Architects and Specifiers.</p>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('inquiries')">View All Inquiries →</button>
+        </div>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Inquiry ID</th>
+                <th>Architect / Studio</th>
+                <th>Typology</th>
+                <th>Location</th>
+                <th>Doors</th>
+                <th>Status</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-recent-inquiries"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: DOORS & SPECS -->
+      <section class="tab-pane" id="tab-doors">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Architectural Doors Catalog</h2>
+            <p class="section-desc">Manage relational door models, multiple image galleries, primary cover photos, and merchandising tags.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openDoorModal()">+ Add New Door</button>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-bar">
+          <input type="text" id="door-search" class="filter-input" placeholder="Search door name, SKU, or specs...">
+          <select id="door-filter-brand" class="filter-select">
+            <option value="all">All Brands</option>
+          </select>
+          <select id="door-filter-category" class="filter-select">
+            <option value="all">All Categories</option>
+          </select>
+          <select id="door-filter-system" class="filter-select">
+            <option value="all">All 8 Systems</option>
+          </select>
+          <select id="door-filter-tag" class="filter-select">
+            <option value="all">All Tags</option>
+            <option value="New Arrival">New Arrivals</option>
+            <option value="Best Seller">Best Sellers</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Cover</th>
+                <th>Model / Name</th>
+                <th>SKU</th>
+                <th>Brand</th>
+                <th>System</th>
+                <th>Base Price</th>
+                <th>Effective Price</th>
+                <th>Merchandising Tags</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="doors-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: BRANDS -->
+      <section class="tab-pane" id="tab-brands">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Architectural Brands Management</h2>
+            <p class="section-desc">Curate certified European manufacturers and partners. Attached doors link directly to dedicated brand pages.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openBrandModal()">+ Add Partner Brand</button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Brand Name</th>
+                <th>Slug</th>
+                <th>Origin Country</th>
+                <th>Bio / Overview</th>
+                <th>Attached Doors</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="brands-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: CATEGORIES -->
+      <section class="tab-pane" id="tab-categories">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Door Categories & Typologies</h2>
+            <p class="section-desc">Manage independent categories with sort order. Use bidirectional door assignment to link multiple doors at once.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openCategoryModal()">+ Add Category</button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Order</th>
+                <th>Category Name</th>
+                <th>Slug</th>
+                <th>Description</th>
+                <th>Attached Doors</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="categories-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: 8 MECHANICAL SYSTEMS -->
+      <section class="tab-pane" id="tab-systems">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Strict 8 Mechanical Systems Directory</h2>
+            <p class="section-desc">Core architectural opening typologies with CAD diagrams, engineering load capacities, and jamb tolerances.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>CAD Diagram</th>
+                <th>System Name</th>
+                <th>Capacity</th>
+                <th>Max Height / Span</th>
+                <th>Subframe Profile</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="systems-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 6: PROMOTIONS & GROUPS -->
+      <section class="tab-pane" id="tab-promotions">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Promotions & Custom Product Groups</h2>
+            <p class="section-desc">Group doors into custom architectural packages and apply percentage or fixed discounts. Highest discount wins on render.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-secondary" onclick="openGroupModal()">+ New Product Group</button>
+            <button class="btn btn-primary" onclick="openPromoModal()">+ Create Promotion</button>
+          </div>
+        </div>
+
+        <!-- Groups Section -->
+        <h3 class="section-title" style="font-size: 15px; margin-bottom: 12px;">1. Custom Product Groups</h3>
+        <div class="table-container" style="margin-bottom: 32px;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Group Name</th>
+                <th>Description</th>
+                <th>Assigned Doors</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="groups-table-body"></tbody>
+          </table>
+        </div>
+
+        <!-- Promotions Section -->
+        <h3 class="section-title" style="font-size: 15px; margin-bottom: 12px;">2. Active Promotional Campaigns</h3>
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Campaign Name</th>
+                <th>Discount</th>
+                <th>Target Scope</th>
+                <th>Target Entities</th>
+                <th>Validity Window</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="promos-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 7: COMPLETED PROJECTS -->
+      <section class="tab-pane" id="tab-projects">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Completed Architectural Case Studies</h2>
+            <p class="section-desc">Document completed installations, client pull quotes, architect practices, and installed systems.</p>
+          </div>
+          <button class="btn btn-primary" onclick="openProjectModal()">+ Add Case Study</button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Visual</th>
+                <th>Project Title</th>
+                <th>Architect Studio</th>
+                <th>Location</th>
+                <th>Client Typology</th>
+                <th>Systems</th>
+                <th>Client Endorsement</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 8: SPEC INQUIRIES -->
+      <section class="tab-pane" id="tab-inquiries">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Architectural Specification Inquiries</h2>
+            <p class="section-desc">Review submitted door schedules, preliminary openings counts, and CAD attachments.</p>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Contact & Studio</th>
+                <th>Location</th>
+                <th>Classification</th>
+                <th>Doors Schedule</th>
+                <th>Attachments</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="inquiries-table-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 9: SETTINGS & ACCOUNT -->
+      <section class="tab-pane" id="tab-settings">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Showroom & Global System Settings</h2>
+            <p class="section-desc">Configure brand identity, hero section, homepage visibility toggles, and admin credentials.</p>
+          </div>
+          <button class="btn btn-primary" onclick="saveGlobalSettings()">Save All Settings</button>
+        </div>
+
+        <div class="form-grid" style="margin-bottom: 32px;">
+          <!-- Brand Identity -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 10px;">
+            <h3 class="section-title" style="font-size: 15px;">1. Brand Identity & Global Contacts</h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Company Brand Name</label>
+            <input type="text" id="setting-companyName" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tagline</label>
+            <input type="text" id="setting-tagline" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Direct Trade Phone</label>
+            <input type="text" id="setting-phone" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Trade Specification Email</label>
+            <input type="email" id="setting-email" class="form-control">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Certifications / Standards Text</label>
+            <input type="text" id="setting-certifications" class="form-control">
+          </div>
+
+          <!-- Hero Section Management -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
+            <h3 class="section-title" style="font-size: 15px;">2. Homepage Hero Section</h3>
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Hero Headline</label>
+            <input type="text" id="setting-hero-headline" class="form-control">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Hero Subheadline</label>
+            <textarea id="setting-hero-subheadline" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Engineering Directive Tag</label>
+            <input type="text" id="setting-hero-directive" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Model Callout Badge</label>
+            <input type="text" id="setting-hero-modelBadge" class="form-control">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Hero Background Image URL</label>
+            <input type="text" id="setting-hero-imageUrl" class="form-control">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Engineering Metrics Pill Text</label>
+            <input type="text" id="setting-hero-metricsPill" class="form-control">
+          </div>
+
+          <!-- Section Visibility Toggles -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
+            <h3 class="section-title" style="font-size: 15px;">3. Homepage Section Visibility & Titles</h3>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Arrivals Section Title</label>
+            <input type="text" id="setting-sec-arrivals-title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Arrivals Visibility</label>
+            <select id="setting-sec-arrivals-enabled" class="form-control">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Architectural Favorites (Best Sellers) Title</label>
+            <input type="text" id="setting-sec-bestsellers-title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Best Sellers Visibility</label>
+            <select id="setting-sec-bestsellers-enabled" class="form-control">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Door Systems Directory Title</label>
+            <input type="text" id="setting-sec-systems-title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Door Systems Visibility</label>
+            <select id="setting-sec-systems-enabled" class="form-control">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Completed Projects Case Studies Title</label>
+            <input type="text" id="setting-sec-projects-title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Case Studies Visibility</label>
+            <select id="setting-sec-projects-enabled" class="form-control">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <!-- Admin Password Update Form -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
+            <h3 class="section-title" style="font-size: 15px;">4. Admin Security & Password Update</h3>
+            <p class="section-desc">Change the default <code>admin</code> password or manage admin accounts. System guard prevents deleting the last active account.</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" id="pw-current" class="form-control" placeholder="Enter current password">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Security Password</label>
+            <input type="password" id="pw-new" class="form-control" placeholder="Min 4 characters">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" id="pw-confirm" class="form-control" placeholder="Repeat new password">
+          </div>
+          <div class="form-group" style="justify-content: flex-end;">
+            <button class="btn btn-secondary" onclick="updateAdminPassword()">Update Admin Password</button>
+          </div>
+
+          <!-- Database Backup & Restore -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
+            <h3 class="section-title" style="font-size: 15px;">5. System Recovery & Raw Data Store</h3>
+          </div>
+
+          <div class="form-group form-full" style="display:flex; gap:12px; align-items:center;">
+            <button class="btn btn-secondary" onclick="exportDataJson()">Export Database JSON</button>
+            <button class="btn btn-danger" onclick="resetToInitialSeed()">Reset Store to Initial Seed</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- 1. DOOR EDITOR MODAL -->
+<div class="modal-backdrop" id="modal-door">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="modal-title" id="door-modal-title">Edit Architectural Door</h3>
+      <span class="modal-close" onclick="closeModal('modal-door')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="door-form" onsubmit="handleDoorSubmit(event)">
+        <input type="hidden" id="door-id">
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Door Name *</label>
+            <input type="text" id="door-name" class="form-control" required placeholder="e.g. Flush Pivot X-300">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Model SKU *</label>
+            <input type="text" id="door-sku" class="form-control" required placeholder="e.g. PV-300">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Base Specification Price ($) *</label>
+            <input type="number" id="door-basePrice" class="form-control" required min="0" placeholder="3450">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Manufacturer Brand *</label>
+            <select id="door-brandId" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Mechanical System (Strict 8) *</label>
+            <select id="door-systemId" class="form-control" required></select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">URL Slug (Auto-generated if empty)</label>
+            <input type="text" id="door-slug" class="form-control" placeholder="flush-pivot-x-300">
+          </div>
+
+          <!-- Merchandising Tags -->
+          <div class="form-group form-full">
+            <label class="form-label">Merchandising Tags (Dynamic Homepage Showcases)</label>
+            <div style="display:flex; gap:16px; margin-top:4px;">
+              <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+                <input type="checkbox" id="door-tag-newarrival" value="New Arrival"> New Arrival
+              </label>
+              <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+                <input type="checkbox" id="door-tag-bestseller" value="Best Seller"> Best Seller
+              </label>
+            </div>
+          </div>
+
+          <!-- Categories Multi-check -->
+          <div class="form-group form-full">
+            <label class="form-label">Assigned Categories</label>
+            <div id="door-categories-checklist" style="display:flex; flex-wrap:wrap; gap:14px; margin-top:4px;"></div>
+          </div>
+
+          <!-- Multi-Image Manager -->
+          <div class="form-group form-full">
+            <label class="form-label">Image Gallery (Supports Multiple Images with Primary Flag)</label>
+            <div class="gallery-manager">
+              <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="door-new-img-url" class="form-control" placeholder="Paste image URL..." style="flex:1;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="addImageFromUrl()">+ Add URL</button>
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer; margin:0;">
+                  Upload File
+                  <input type="file" id="door-img-file" accept="image/*" style="display:none;" onchange="handleImageFileUpload(this)">
+                </label>
+              </div>
+
+              <div class="gallery-grid" id="door-gallery-container"></div>
+            </div>
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Editorial Description</label>
+            <textarea id="door-shortDescription" class="form-control" rows="2" placeholder="Smoked Fumed Oak veneer with sub-millimeter perimeter shadow line..."></textarea>
+          </div>
+
+          <!-- Architectural Specs -->
+          <div class="form-full" style="border-top:1px solid var(--color-surface-container); padding-top:14px; margin-top:8px;">
+            <h4 class="form-label" style="font-size:11px; color:var(--color-primary); margin-bottom:10px;">Architectural Engineering Specifications</h4>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Acoustic Rating</label>
+            <input type="text" id="door-spec-acoustic" class="form-control" placeholder="e.g. 42dB Soundproof">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Max Height</label>
+            <input type="text" id="door-spec-maxHeight" class="form-control" placeholder="e.g. 3000mm">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Frame / Jamb Profile</label>
+            <input type="text" id="door-spec-frame" class="form-control" placeholder="e.g. Zero-Jamb Flush Inset">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Latches / Hinges</label>
+            <input type="text" id="door-spec-latches" class="form-control" placeholder="e.g. Magnetic Silent Mortise & 3D Hinges">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Core Material</label>
+            <input type="text" id="door-spec-core" class="form-control" placeholder="e.g. Acoustic Honeycomb Alu">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Finishes (Comma-separated)</label>
+            <input type="text" id="door-spec-finishes" class="form-control" placeholder="Smoked Oak, American Walnut, Concrete">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Lead Time</label>
+            <input type="text" id="door-spec-lead" class="form-control" placeholder="e.g. 6-8 Weeks">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select id="door-isActive" class="form-control">
+              <option value="true">Active in Showroom</option>
+              <option value="false">Deactivated / Draft</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="margin-top:24px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-door')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Door Model</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 2. BRAND EDITOR MODAL -->
+<div class="modal-backdrop" id="modal-brand">
+  <div class="modal-dialog" style="max-width:550px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="brand-modal-title">Edit Partner Brand</h3>
+      <span class="modal-close" onclick="closeModal('modal-brand')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="brand-form" onsubmit="handleBrandSubmit(event)">
+        <input type="hidden" id="brand-id">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Brand Name *</label>
+            <input type="text" id="brand-name" class="form-control" required placeholder="e.g. Rimadesio Milan">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slug</label>
+            <input type="text" id="brand-slug" class="form-control" placeholder="rimadesio-milan">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Country of Origin *</label>
+            <input type="text" id="brand-originCountry" class="form-control" required placeholder="e.g. Italy">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Hero Banner Image URL</label>
+            <input type="text" id="brand-heroBanner" class="form-control" placeholder="https://...">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Brand Bio / Architectural Directive</label>
+            <textarea id="brand-bio" class="form-control" rows="3"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Status</label>
+            <select id="brand-isActive" class="form-control">
+              <option value="true">Active Partner</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-brand')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Brand</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 3. BRAND REASSIGNMENT / SAFE DELETE MODAL -->
+<div class="modal-backdrop" id="modal-brand-reassign">
+  <div class="modal-dialog" style="max-width:500px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Safe Brand Deletion</h3>
+      <span class="modal-close" onclick="closeModal('modal-brand-reassign')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; line-height:1.6; margin-bottom:16px;" id="brand-reassign-warning"></p>
+      <div class="form-group">
+        <label class="form-label">Reassign Attached Doors To:</label>
+        <select id="brand-reassign-target" class="form-control">
+          <option value="">Deactivate doors (Do not delete)</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-brand-reassign')">Cancel</button>
+      <button type="button" class="btn btn-danger" id="brand-confirm-delete-btn">Commit Deletion</button>
+    </div>
+  </div>
+</div>
+
+<!-- 4. CATEGORY EDITOR MODAL -->
+<div class="modal-backdrop" id="modal-category">
+  <div class="modal-dialog" style="max-width:550px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="cat-modal-title">Edit Door Category</h3>
+      <span class="modal-close" onclick="closeModal('modal-category')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="category-form" onsubmit="handleCategorySubmit(event)">
+        <input type="hidden" id="category-id">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Category Name *</label>
+            <input type="text" id="category-name" class="form-control" required placeholder="e.g. Flush Concealed Portals">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Slug</label>
+            <input type="text" id="category-slug" class="form-control" placeholder="flush-concealed">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sort Order</label>
+            <input type="number" id="category-sortOrder" class="form-control" value="1">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Cover Image URL</label>
+            <input type="text" id="category-coverImage" class="form-control" placeholder="https://...">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Description</label>
+            <textarea id="category-description" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Status</label>
+            <select id="category-isActive" class="form-control">
+              <option value="true">Active Category</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-category')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Category</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 5. CATEGORY BIDIRECTIONAL DOOR ASSIGNMENT MODAL -->
+<div class="modal-backdrop" id="modal-category-doors">
+  <div class="modal-dialog" style="max-width:650px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="cat-doors-modal-title">Assign Doors to Category</h3>
+      <span class="modal-close" onclick="closeModal('modal-category-doors')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--color-secondary); margin-bottom:16px;">
+        Select doors that belong to this category. Changes synchronize bidirectionally with the door records.
+      </p>
+      <div id="cat-doors-checklist" style="display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-category-doors')">Cancel</button>
+      <button type="button" class="btn btn-primary" id="cat-doors-save-btn">Save Assignments</button>
+    </div>
+  </div>
+</div>
+
+<!-- 6. CATEGORY REASSIGNMENT / SAFE DELETE MODAL -->
+<div class="modal-backdrop" id="modal-category-reassign">
+  <div class="modal-dialog" style="max-width:500px;">
+    <div class="modal-header">
+      <h3 class="modal-title">Safe Category Deletion</h3>
+      <span class="modal-close" onclick="closeModal('modal-category-reassign')">✕</span>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; line-height:1.6; margin-bottom:16px;" id="cat-reassign-warning"></p>
+      <div class="form-group">
+        <label class="form-label">Reassign Attached Doors To:</label>
+        <select id="cat-reassign-target" class="form-control">
+          <option value="">Unassign category from doors</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-category-reassign')">Cancel</button>
+      <button type="button" class="btn btn-danger" id="cat-confirm-delete-btn">Commit Deletion</button>
+    </div>
+  </div>
+</div>
+
+<!-- 7. PRODUCT GROUP MODAL -->
+<div class="modal-backdrop" id="modal-group">
+  <div class="modal-dialog" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="group-modal-title">Edit Product Group</h3>
+      <span class="modal-close" onclick="closeModal('modal-group')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="group-form" onsubmit="handleGroupSubmit(event)">
+        <input type="hidden" id="group-id">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Group Name *</label>
+            <input type="text" id="group-name" class="form-control" required placeholder="e.g. Villa Renovation Package">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Description</label>
+            <textarea id="group-description" class="form-control" rows="2"></textarea>
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Assign Doors to Group</label>
+            <div id="group-doors-checklist" style="display:flex; flex-direction:column; gap:8px; max-height:260px; overflow-y:auto; padding:8px; background:var(--color-surface-low);"></div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-group')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Product Group</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 8. PROMOTION MODAL -->
+<div class="modal-backdrop" id="modal-promo">
+  <div class="modal-dialog" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 class="modal-title" id="promo-modal-title">Edit Promotional Campaign</h3>
+      <span class="modal-close" onclick="closeModal('modal-promo')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="promo-form" onsubmit="handlePromoSubmit(event)">
+        <input type="hidden" id="promo-id">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Campaign Name *</label>
+            <input type="text" id="promo-name" class="form-control" required placeholder="e.g. Villa Specification Incentive">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discount Type *</label>
+            <select id="promo-discountType" class="form-control" required>
+              <option value="percentage">Percentage Off (%)</option>
+              <option value="fixed">Fixed Amount Off ($)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Discount Value *</label>
+            <input type="number" id="promo-discountValue" class="form-control" required min="1" placeholder="e.g. 15 or 400">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Target Scope *</label>
+            <select id="promo-targetType" class="form-control" onchange="renderPromoTargetChecklist()">
+              <option value="group">Target Product Group</option>
+              <option value="category">Target Door Category</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Active Status</label>
+            <select id="promo-isActive" class="form-control">
+              <option value="true">Active Promotion</option>
+              <option value="false">Paused / Inactive</option>
+            </select>
+          </div>
+
+          <div class="form-group form-full">
+            <label class="form-label">Select Target Entities *</label>
+            <div id="promo-target-checklist" style="display:flex; flex-wrap:wrap; gap:12px; padding:10px; background:var(--color-surface-low);"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Start Date (Optional)</label>
+            <input type="date" id="promo-startDate" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">End Date (Optional)</label>
+            <input type="date" id="promo-endDate" class="form-control">
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-promo')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Promotion</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 9. CASE STUDY PROJECT MODAL -->
+<div class="modal-backdrop" id="modal-project">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="modal-title" id="project-modal-title">Edit Architectural Case Study</h3>
+      <span class="modal-close" onclick="closeModal('modal-project')">✕</span>
+    </div>
+    <div class="modal-body">
+      <form id="project-form" onsubmit="handleProjectSubmit(event)">
+        <input type="hidden" id="project-id">
+        <div class="form-grid">
+          <div class="form-group form-full">
+            <label class="form-label">Project Title *</label>
+            <input type="text" id="project-title" class="form-control" required placeholder="e.g. Malibu Pavilion Residence">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Architect Studio / Practice *</label>
+            <input type="text" id="project-architectStudio" class="form-control" required placeholder="e.g. Olson Kundig Collaborators">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Project Location *</label>
+            <input type="text" id="project-location" class="form-control" required placeholder="e.g. Malibu, California">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Client Typology *</label>
+            <select id="project-clientType" class="form-control">
+              <option value="Architect">Architect</option>
+              <option value="Designer">Designer</option>
+              <option value="Contractor">Contractor</option>
+              <option value="Homeowner">Homeowner</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Scale / Openings Metric</label>
+            <input type="text" id="project-scale" class="form-control" placeholder="e.g. 40 Flush Portals across 12,000 sq ft">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Primary High-Resolution Image URL *</label>
+            <input type="text" id="project-imageUrl" class="form-control" required placeholder="https://...">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Client / Architect Pull Quote *</label>
+            <textarea id="project-clientQuote" class="form-control" rows="3" required placeholder="“PORTA allowed us to eliminate every traditional door frame in the residence...”"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Endorsement Author Title</label>
+            <input type="text" id="project-clientName" class="form-control" placeholder="e.g. Lead Project Architect">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Installed Mechanical Systems</label>
+            <div id="project-systems-checklist" style="display:flex; flex-wrap:wrap; gap:12px;"></div>
+          </div>
+        </div>
+        <div class="modal-footer" style="margin-top:20px; padding:16px 0 0 0;">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-project')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Case Study</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- 10. INQUIRY DETAILS MODAL -->
+<div class="modal-backdrop" id="modal-inquiry">
+  <div class="modal-dialog">
+    <div class="modal-header">
+      <h3 class="modal-title" id="inquiry-modal-title">Specification Inquiry Dossier</h3>
+      <span class="modal-close" onclick="closeModal('modal-inquiry')">✕</span>
+    </div>
+    <div class="modal-body" id="inquiry-modal-body"></div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-inquiry')">Close</button>
+      <button type="button" class="btn btn-primary" id="inquiry-toggle-status-btn">Toggle Status</button>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Toast -->
+<div class="admin-toast" id="admin-toast">Action completed</div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -13,6 +13,20 @@ const ADMIN_SESSION_KEY = 'porta_admin_session';
 class Store {
   constructor() {
     this.data = this.loadFromStorage();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', (e) => {
+        if (e.key === STORAGE_KEY && e.newValue) {
+          try {
+            this.data = JSON.parse(e.newValue);
+            window.dispatchEvent(new CustomEvent('porta-store-updated', { detail: this.data }));
+          } catch (err) {
+            console.warn('Cross-tab sync parse error:', err);
+          }
+        } else if (e.key === SPEC_LIST_KEY) {
+          window.dispatchEvent(new CustomEvent('porta-spec-list-updated', { detail: this.getSpecList() }));
+        }
+      });
+    }
   }
 
   loadFromStorage() {
@@ -644,7 +658,8 @@ class Store {
 
     const priceInfo = this.calculateEffectivePrice(door);
     const list = this.getSpecList();
-    const existingIndex = list.findIndex(item => item.doorId === doorId);
+    const configKey = options.configSummary || '';
+    const existingIndex = list.findIndex(item => item.doorId === doorId && (item.configSummary || '') === configKey);
 
     if (existingIndex >= 0) {
       list[existingIndex].quantity += (options.quantity || 1);
@@ -655,6 +670,7 @@ class Store {
 
       const brand = this.getBrandById(door.brandId);
       const system = this.getMechanicalSystemById(door.mechanicalSystemId);
+      const unitEffective = options.effectivePrice !== undefined ? Number(options.effectivePrice) : priceInfo.effectivePrice;
 
       list.push({
         id: Utils.generateId('spec-item'),
@@ -662,14 +678,18 @@ class Store {
         name: door.name,
         sku: door.sku,
         slug: door.slug,
-        brandName: brand ? brand.name : 'PORTA',
-        systemName: system ? system.name : 'Architectural System',
+        brandName: brand ? brand.name : 'Doors Gallery',
+        systemName: options.systemName || (system ? system.name : 'Architectural System'),
         primaryImage,
-        basePrice: priceInfo.basePrice,
-        effectivePrice: priceInfo.effectivePrice,
+        basePrice: options.basePrice !== undefined ? Number(options.basePrice) : priceInfo.basePrice,
+        effectivePrice: unitEffective,
         hasDiscount: priceInfo.hasDiscount,
         quantity: options.quantity || 1,
-        finish: options.finish || (door.specs?.finishes?.[0] || 'Standard Millwork')
+        finish: options.finish || (door.specs?.finishes?.[0] || 'Standard Millwork'),
+        dimensions: options.dimensions || '',
+        frameOption: options.frameOption || '',
+        handing: options.handing || '',
+        configSummary: configKey
       });
     }
 
@@ -723,7 +743,7 @@ class Store {
     }
   }
 
-  /* ================= 11. INQUIRIES & TRADE SPECIFICATIONS ================= */
+  /* ================= 11. ORDER REQUESTS, INQUIRIES & DEAL PIPELINE ================= */
 
   getInquiries() {
     return (this.data.inquiries || []).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -731,10 +751,29 @@ class Store {
 
   submitInquiry(inquiryData) {
     const inquiries = this.data.inquiries || [];
+    const nowIso = new Date().toISOString();
+    const items = inquiryData.items || [];
+    const computedTotal = items.reduce((sum, item) => sum + ((Number(item.effectivePrice || item.basePrice) || 0) * (Number(item.quantity) || 1)), 0);
+    const dealValue = inquiryData.totalEstimate !== undefined ? Number(inquiryData.totalEstimate) : computedTotal;
+    const prefix = inquiryData.requestType === 'product_order' ? 'ORD' : 'INQ';
+
     const newInquiry = {
-      id: `INQ-${Math.floor(1000 + Math.random() * 9000)}`,
-      createdAt: new Date().toISOString(),
-      status: 'new',
+      id: `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`,
+      createdAt: nowIso,
+      updatedAt: nowIso,
+      status: 'new', // Pipeline: new -> contacted -> quoted -> negotiation -> won | lost
+      totalEstimate: dealValue,
+      dealValue: dealValue,
+      adminNotes: '',
+      stageHistory: [
+        {
+          status: 'new',
+          timestamp: nowIso,
+          note: inquiryData.requestType === 'product_order'
+            ? 'Customer submitted single-product quote request'
+            : 'Customer submitted specification inquiry'
+        }
+      ],
       ...inquiryData
     };
     inquiries.unshift(newInquiry);
@@ -743,11 +782,43 @@ class Store {
     return newInquiry;
   }
 
-  updateInquiryStatus(id, newStatus) {
+  updateInquiryStatus(id, newStatus, note = '') {
     const inquiries = this.data.inquiries || [];
     const item = inquiries.find(i => i.id === id);
     if (item) {
+      const nowIso = new Date().toISOString();
       item.status = newStatus;
+      item.updatedAt = nowIso;
+      if (newStatus === 'won') {
+        item.closedAt = nowIso;
+      }
+      item.stageHistory = item.stageHistory || [];
+      item.stageHistory.unshift({
+        status: newStatus,
+        timestamp: nowIso,
+        note: note || `Pipeline stage updated to ${newStatus.toUpperCase()}`
+      });
+      this.saveToStorage();
+    }
+    return item;
+  }
+
+  updateInquiryDetails(id, updates = {}) {
+    const inquiries = this.data.inquiries || [];
+    const item = inquiries.find(i => i.id === id);
+    if (item) {
+      const nowIso = new Date().toISOString();
+      const prevStatus = item.status;
+      Object.assign(item, updates, { updatedAt: nowIso });
+      if (updates.status && updates.status !== prevStatus) {
+        if (updates.status === 'won') item.closedAt = nowIso;
+        item.stageHistory = item.stageHistory || [];
+        item.stageHistory.unshift({
+          status: updates.status,
+          timestamp: nowIso,
+          note: updates.stageNote || `Stage changed from ${prevStatus.toUpperCase()} to ${updates.status.toUpperCase()}`
+        });
+      }
       this.saveToStorage();
     }
     return item;

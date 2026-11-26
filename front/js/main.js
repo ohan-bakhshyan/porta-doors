@@ -346,7 +346,7 @@ function renderDoorCarouselCard(door, badgeText) {
   return `
     <div class="w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 flex-shrink-0 px-2 flex flex-col">
       <article class="group bg-white border border-hairline hover:border-gold/70 transition-all flex flex-col h-full shadow-xs">
-        <div class="relative aspect-[4/4.5] overflow-hidden bg-surface-container">
+        <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="relative aspect-[4/4.5] overflow-hidden bg-surface-container block">
           <img src="${primaryImg}" alt="${Utils.escapeHtml(door.name)}" class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"/>
           <span class="absolute top-2.5 left-2.5 bg-white/95 text-ink border-l-2 border-gold font-label text-[9px] uppercase tracking-wider px-2 py-0.5 shadow-xs">
             ${Utils.escapeHtml(badgeText)}
@@ -356,7 +356,7 @@ function renderDoorCarouselCard(door, badgeText) {
               -${priceInfo.discountPercent}% Offer
             </span>
           ` : ''}
-        </div>
+        </a>
 
         <div class="p-3.5 flex flex-col justify-between flex-grow">
           <div>
@@ -366,7 +366,7 @@ function renderDoorCarouselCard(door, badgeText) {
             </div>
 
             <h3 class="font-headline text-sm font-medium uppercase text-ink tracking-tight leading-snug">
-              ${Utils.escapeHtml(door.name)}
+              <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="hover:text-gold-dark transition-colors">${Utils.escapeHtml(door.name)}</a>
             </h3>
 
             <p class="text-[11px] text-on-surface-variant mt-1 leading-relaxed line-clamp-2">
@@ -391,9 +391,14 @@ function renderDoorCarouselCard(door, badgeText) {
               ` : ''}
             </div>
 
-            <button onclick="addToSpec('${door.id}')" class="border border-gold bg-white text-ink hover:bg-ink hover:text-gold-light font-label text-[10px] font-medium uppercase tracking-wider px-2.5 py-1.5 transition-colors shrink-0">
-              + Spec List
-            </button>
+            <div class="flex items-center gap-1 shrink-0">
+              <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="border border-gold bg-white text-ink hover:bg-ink hover:text-gold-light font-label text-[10px] font-medium uppercase tracking-wider px-2.5 py-1.5 transition-colors">
+                Request Quote
+              </a>
+              <button onclick="addToSpec('${door.id}')" title="Add to Spec List" class="border border-hairline bg-surface-low text-ink hover:border-gold px-2 py-1.5 font-label text-[10px] transition-colors">
+                +
+              </button>
+            </div>
           </div>
         </div>
       </article>

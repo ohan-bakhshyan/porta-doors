@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>DOORS GALLERY — Product Configuration & Quote</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+  <link rel="stylesheet" href="../shared/css/variables.css"/>
+
+  <style>
+    /* Spec List Drawer */
+    .spec-drawer-backdrop,
+    .quote-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(20, 20, 20, 0.42);
+      backdrop-filter: blur(2px);
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .spec-drawer-backdrop.open,
+    .quote-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .spec-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 400px;
+      background: #ffffff;
+      z-index: 101;
+      box-shadow: -6px 0 24px rgba(0, 0, 0, 0.1);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .spec-drawer.open {
+      transform: translateX(0);
+    }
+
+    /* Request a Quote Order Drawer / Modal Menu */
+    .quote-order-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      max-width: 480px;
+      background: #ffffff;
+      z-index: 110;
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.14);
+      transform: translateX(100%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+    .quote-order-drawer.open {
+      transform: translateX(0);
+    }
+
+    .pdp-tab-pane {
+      display: none;
+    }
+    .pdp-tab-pane.active {
+      display: block;
+    }
+  </style>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#ffffff",
+            "surface-low": "#f8f8f6",
+            "surface-container": "#f1f0ec",
+            "surface-high": "#e7e5df",
+            "on-surface": "#26282a",
+            "on-surface-variant": "#5c6066",
+            "secondary": "#6e7278",
+            "ink": "#141414",
+            "gold": "#b8922a",
+            "gold-bright": "#c5a038",
+            "gold-dark": "#96751d",
+            "gold-light": "#e5c76b",
+            "gold-tint": "#fbf8ef",
+            "hairline": "#e5e3dc"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk", "sans-serif"],
+            "label": ["Space Grotesk", "sans-serif"],
+            "body": ["Inter", "sans-serif"]
+          },
+          maxWidth: {
+            "fhd": "1240px"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body text-[14px] text-on-surface antialiased selection:bg-gold-tint selection:text-ink">
+
+  <!-- ================= HEADER & CATEGORY MENU ================= -->
+  <header class="sticky top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-hairline shadow-[0_1px_4px_rgba(0,0,0,0.03)]">
+    <div class="max-w-fhd mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3">
+      <a href="index.html" class="flex items-center gap-2.5 shrink-0 group">
+        <img id="header-logo-img" src="../shared/assets/logo-mark.png" alt="Doors Gallery Logo" class="h-8 sm:h-9 w-auto object-contain"/>
+        <div class="flex flex-col">
+          <span class="font-headline text-sm sm:text-[15px] font-semibold tracking-[0.14em] text-ink uppercase leading-none group-hover:text-gold-dark transition-colors" id="header-brand-title">DOORS GALLERY</span>
+          <span class="text-[9px] font-label uppercase tracking-[0.18em] text-secondary mt-0.5 hidden sm:block">Product Configurator</span>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-6">
+        <a href="index.html" class="font-label text-[11px] font-medium uppercase tracking-[0.14em] text-on-surface-variant hover:text-gold-dark py-1">Home</a>
+        <a href="catalog.html" class="font-label text-[11px] font-semibold uppercase tracking-[0.14em] text-ink border-b-2 border-gold py-1">Catalog</a>
+        <a href="index.html#new-arrivals" class="font-label text-[11px] font-medium uppercase tracking-[0.14em] text-on-surface-variant hover:text-gold-dark py-1">New Models</a>
+        <a href="index.html#bestsellers" class="font-label text-[11px] font-medium uppercase tracking-[0.14em] text-on-surface-variant hover:text-gold-dark py-1">Best Sellers</a>
+        <a href="index.html#systems" class="font-label text-[11px] font-medium uppercase tracking-[0.14em] text-on-surface-variant hover:text-gold-dark py-1">8 Systems</a>
+        <a href="index.html#projects" class="font-label text-[11px] font-medium uppercase tracking-[0.14em] text-on-surface-variant hover:text-gold-dark py-1">Projects</a>
+      </nav>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a id="header-phone" href="tel:+18009427678" class="hidden xl:inline-block font-label text-[11px] tracking-wider text-on-surface-variant hover:text-gold-dark">+1 (800) 942-7678</a>
+
+        <button onclick="toggleSpecDrawer(true)" class="border border-hairline bg-surface-low hover:border-gold px-2.5 py-1.5 font-label text-[11px] uppercase tracking-wider text-on-surface flex items-center gap-1.5 transition-colors">
+          <span class="hidden sm:inline">Spec List</span>
+          <span class="material-symbols-outlined text-[15px] sm:hidden">list_alt</span>
+          <span class="font-mono font-semibold text-gold-dark" id="spec-list-counter">[0]</span>
+        </button>
+
+        <a href="../admin/index.html" title="Admin CMS" class="w-8 h-8 rounded-full border border-hairline bg-surface-low text-on-surface-variant hover:border-gold hover:text-gold-dark hidden sm:flex items-center justify-center transition-colors">
+          <span class="material-symbols-outlined text-[16px]">tune</span>
+        </a>
+
+        <button onclick="toggleMobileMenu()" class="lg:hidden w-9 h-9 border border-hairline bg-white text-ink flex items-center justify-center hover:border-gold" aria-label="Toggle Menu">
+          <span class="material-symbols-outlined text-[20px]" id="mobile-menu-icon">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Category Bar -->
+    <div class="border-t border-hairline bg-surface-low">
+      <div class="max-w-fhd mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4 overflow-x-auto no-scrollbar" id="header-category-bar"></div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-nav-drawer" class="hidden lg:hidden bg-white border-t border-hairline shadow-lg">
+      <div class="max-w-fhd mx-auto px-4 py-3 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <a href="index.html" class="px-3 py-2 bg-surface-low text-xs font-label uppercase tracking-wider text-ink border border-hairline">Home</a>
+          <a href="catalog.html" class="px-3 py-2 bg-surface-low text-xs font-label uppercase tracking-wider text-ink border border-hairline">Catalog</a>
+          <a href="index.html#systems" class="px-3 py-2 bg-surface-low text-xs font-label uppercase tracking-wider text-ink border border-hairline">8 Systems</a>
+          <a href="../admin/index.html" class="px-3 py-2 bg-surface-low text-xs font-label uppercase tracking-wider text-ink border border-hairline">Admin CMS</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOAST -->
+  <div class="fixed bottom-5 right-5 z-50 bg-white border-l-4 border-gold text-ink px-4 py-2.5 font-label text-[11px] uppercase tracking-wider shadow-lg transition-all duration-300 transform translate-y-20 opacity-0 pointer-events-none flex items-center gap-2" id="spec-toast">
+    <span class="material-symbols-outlined text-[16px] text-gold-dark">check_circle</span>
+    <span id="toast-message">Saved</span>
+  </div>
+
+  <!-- ================= BREADCRUMBS ================= -->
+  <div class="bg-surface-low border-b border-hairline">
+    <div class="max-w-fhd mx-auto px-4 sm:px-6 py-2.5 flex items-center flex-wrap gap-1.5 font-label text-[10px] uppercase tracking-wider text-secondary" id="pdp-breadcrumbs">
+      <a href="index.html" class="hover:text-gold-dark">Home</a>
+      <span>/</span>
+      <a href="catalog.html" class="hover:text-gold-dark">Catalog</a>
+    </div>
+  </div>
+
+  <main class="max-w-fhd mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+    <!-- ================= 1. MAIN 2-COLUMN PRODUCT HERO & CONFIGURATOR ================= -->
+    <section class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+
+      <!-- LEFT COLUMN: MULTI-IMAGE GALLERY (6 Cols) -->
+      <div class="lg:col-span-6 lg:sticky lg:top-28 space-y-3">
+        <div class="relative aspect-[4/4.6] bg-surface-container border border-hairline overflow-hidden group">
+          <img id="pdp-main-image" src="" alt="Door Elevation" class="w-full h-full object-cover transition-transform duration-500"/>
+
+          <!-- Promo / Tag Badges -->
+          <div class="absolute top-3 left-3 flex flex-col gap-1.5" id="pdp-image-badges"></div>
+
+          <!-- Prev / Next Image Arrows (shown when multiple images exist) -->
+          <button id="pdp-img-prev" onclick="cycleProductImage(-1)" class="hidden absolute left-2.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 border border-hairline hover:border-gold text-ink items-center justify-center shadow-xs">
+            <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+          </button>
+          <button id="pdp-img-next" onclick="cycleProductImage(1)" class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/90 border border-hairline hover:border-gold text-ink items-center justify-center shadow-xs">
+            <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+          </button>
+
+          <div class="absolute bottom-2.5 left-2.5 right-2.5 bg-white/90 backdrop-blur-sm px-3 py-1.5 border border-hairline text-[11px] text-on-surface-variant truncate" id="pdp-image-caption"></div>
+        </div>
+
+        <!-- Thumbnail Strip -->
+        <div class="grid grid-cols-5 gap-2" id="pdp-thumbnails"></div>
+
+        <!-- Architectural CAD Quick Card -->
+        <div class="p-3.5 bg-surface-low border border-hairline flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-10 h-10 bg-white border border-hairline flex items-center justify-center text-ink shrink-0" id="pdp-system-svg"></div>
+            <div>
+              <div class="font-label text-[10px] uppercase tracking-wider text-gold-dark font-semibold" id="pdp-system-code">SW-101</div>
+              <div class="text-xs font-medium text-ink" id="pdp-system-label">Single Swing Flush System</div>
+            </div>
+          </div>
+          <button onclick="downloadDoorCad()" class="px-2.5 py-1.5 bg-white border border-hairline hover:border-gold font-label text-[10px] uppercase tracking-wider text-ink flex items-center gap-1 shrink-0">
+            <span class="material-symbols-outlined text-[14px] text-gold-dark">download</span>
+            <span>CAD / Specs</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: PRODUCT DETAILS, PRICE & CONFIGURATION (6 Cols) -->
+      <div class="lg:col-span-6 space-y-5">
+
+        <!-- Brand, SKU & Stock Row -->
+        <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-hairline">
+          <div class="flex items-center gap-2 font-label text-[11px] uppercase tracking-wider text-secondary">
+            <a id="pdp-brand-link" href="catalog.html" class="text-ink font-semibold hover:text-gold-dark hover:underline">Doors Gallery</a>
+            <span>•</span>
+            <span>SKU: <strong class="font-mono text-on-surface" id="pdp-sku">—</strong></span>
+          </div>
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-gold-tint border border-gold/50 font-label text-[10px] uppercase tracking-wider text-gold-dark font-semibold" id="pdp-stock-badge">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold-dark"></span>
+            Available for Order
+          </span>
+        </div>
+
+        <!-- Product Title & Short Summary -->
+        <div>
+          <h1 class="font-headline text-xl sm:text-2xl lg:text-[26px] uppercase text-ink tracking-tight leading-snug font-medium" id="pdp-title">
+            Loading Door Model...
+          </h1>
+          <p class="text-xs sm:text-[13px] text-on-surface-variant mt-1.5 leading-relaxed" id="pdp-short-desc"></p>
+        </div>
+
+        <!-- Live Pricing Block (Doors LA structure: Price from + dynamic configured price) -->
+        <div class="p-4 bg-surface-low border border-hairline flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="font-label text-[10px] uppercase tracking-widest text-secondary" id="pdp-price-label">Configured Unit Price</div>
+            <div class="flex items-baseline gap-2.5 mt-0.5">
+              <span class="font-headline text-2xl sm:text-[28px] font-semibold text-gold-dark" id="pdp-unit-price">$0</span>
+              <span class="font-headline text-sm text-secondary line-through hidden" id="pdp-old-price">$0</span>
+              <span class="px-2 py-0.5 bg-gold-tint border border-gold/50 font-label text-[10px] uppercase text-gold-dark font-semibold hidden" id="pdp-promo-pill"></span>
+            </div>
+            <div class="text-[11px] text-secondary mt-0.5" id="pdp-base-slab-note">Base slab starting at $0</div>
+          </div>
+          <div class="text-left sm:text-right border-t sm:border-t-0 pt-2 sm:pt-0 border-hairline">
+            <div class="font-label text-[10px] uppercase tracking-wider text-secondary">Lead Time</div>
+            <div class="font-label text-xs font-semibold text-ink uppercase mt-0.5" id="pdp-lead-time">6–8 Weeks</div>
+          </div>
+        </div>
+
+        <!-- CONFIGURATOR OPTIONS (Doors LA Style) -->
+        <div class="space-y-4">
+
+          <!-- 1. Surface Finish / Color -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="font-label text-[11px] uppercase tracking-wider text-ink font-semibold">1. Color / Surface Finish:</label>
+              <span class="text-xs text-gold-dark font-medium" id="selected-finish-label">—</span>
+            </div>
+            <div class="flex flex-wrap gap-2" id="config-finishes"></div>
+          </div>
+
+          <!-- 2. Door Configuration (8 Mechanical Systems) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="font-label text-[11px] uppercase tracking-wider text-ink font-semibold" for="config-system-select">2. Door Configuration / System:</label>
+              <span class="text-[11px] text-secondary" id="selected-system-note">Single Leaf</span>
+            </div>
+            <select id="config-system-select" onchange="onSystemChange(this.value)" class="w-full bg-white border border-hairline focus:border-gold px-3 py-2 text-xs font-medium text-ink outline-none"></select>
+          </div>
+
+          <!-- 3. Choose Height of Door Slab -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="font-label text-[11px] uppercase tracking-wider text-ink font-semibold">3. Choose Height of Door Slab:</label>
+              <span class="text-[11px] text-secondary" id="selected-height-label">80" Standard</span>
+            </div>
+            <div class="grid grid-cols-3 sm:grid-cols-5 gap-2" id="config-heights"></div>
+          </div>
+
+          <!-- 4. Choose Width of Door Slab -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="font-label text-[11px] uppercase tracking-wider text-ink font-semibold">4. Choose Width:</label>
+              <span class="text-[11px] text-secondary" id="selected-width-label">30"</span>
+            </div>
+            <div class="grid grid-cols-4 sm:grid-cols-5 gap-2" id="config-widths"></div>
+          </div>
+
+          <!-- 5. Jamb / Frame & Hardware Package + Handing -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-label text-[11px] uppercase tracking-wider text-ink font-semibold mb-1.5" for="config-frame-select">5. Frame & Hardware Set:</label>
+              <select id="config-frame-select" onchange="onFrameChange(this.value)" class="w-full bg-white border border-hairline focus:border-gold px-3 py-2 text-xs text-ink outline-none">
+                <option value="slab">Slab Only — No Frame (+$0)</option>
+                <option value="subframe" selected>Concealed Aluminum Frame + 3D Hinges (+$340)</option>
+                <option value="complete">Complete Set: Frame + Hinges + Magnetic Lock (+$490)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block font-label text-[11px] uppercase tracking-wider text-ink font-semibold mb-1.5" for="config-handing-select">6. Swing / Opening Handing:</label>
+              <select id="config-handing-select" onchange="updateConfiguredPrice()" class="w-full bg-white border border-hairline focus:border-gold px-3 py-2 text-xs text-ink outline-none">
+                <option value="Left Hand Inswing">Left Hand Inswing</option>
+                <option value="Right Hand Inswing">Right Hand Inswing</option>
+                <option value="Left Hand Outswing">Left Hand Outswing</option>
+                <option value="Right Hand Outswing">Right Hand Outswing</option>
+                <option value="Universal / Sliding Cavity">Universal / Sliding</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quantity + Primary CTA Row -->
+          <div class="pt-3 border-t border-hairline space-y-3">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-label uppercase tracking-wider text-secondary">Total Estimate (<span id="pdp-qty-summary">1</span> set):</span>
+              <span class="font-headline text-lg font-semibold text-ink" id="pdp-total-price">$0</span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-stretch gap-2.5">
+              <!-- Quantity Box -->
+              <div class="flex items-center border border-hairline bg-surface-low h-11 sm:w-28 justify-between px-2 shrink-0">
+                <button type="button" onclick="adjustPdpQty(-1)" class="w-7 h-7 bg-white border border-hairline hover:border-gold text-sm font-medium">−</button>
+                <span class="font-mono text-sm font-semibold text-ink" id="pdp-qty-val">1</span>
+                <button type="button" onclick="adjustPdpQty(1)" class="w-7 h-7 bg-white border border-hairline hover:border-gold text-sm font-medium">+</button>
+              </div>
+
+              <!-- PRIMARY CALL TO ACTION: REQUEST A QUOTE (Opens Order Details Menu) -->
+              <button type="button" onclick="openQuoteOrderMenu()" class="flex-1 h-11 bg-ink text-gold-light border border-gold/60 hover:bg-gold hover:text-white font-label text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2 shadow-sm">
+                <span class="material-symbols-outlined text-[17px]">request_quote</span>
+                <span>Request a Quote</span>
+              </button>
+
+              <!-- Secondary: Add to Multi-Door Spec List -->
+              <button type="button" onclick="addConfiguredToSpecList()" class="h-11 px-3.5 bg-white border border-gold text-ink hover:bg-gold-tint font-label text-[10px] font-semibold uppercase tracking-wider transition-colors flex items-center justify-center gap-1 shrink-0" title="Add to Multi-Door Spec List">
+                <span>+ Spec List</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Value Highlights Bar -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
+            <div class="p-2.5 bg-surface-low border border-hairline text-center">
+              <div class="font-label text-[10px] font-semibold uppercase text-ink" id="hl-acoustic">42dB Core</div>
+              <div class="text-[10px] text-secondary">Sound Insulation</div>
+            </div>
+            <div class="p-2.5 bg-surface-low border border-hairline text-center">
+              <div class="font-label text-[10px] font-semibold uppercase text-ink">Zero-Jamb</div>
+              <div class="text-[10px] text-secondary">Flush Plaster Fit</div>
+            </div>
+            <div class="p-2.5 bg-surface-low border border-hairline text-center">
+              <div class="font-label text-[10px] font-semibold uppercase text-ink">2-Yr Warranty</div>
+              <div class="text-[10px] text-secondary">Structural Core</div>
+            </div>
+            <div class="p-2.5 bg-surface-low border border-hairline text-center">
+              <div class="font-label text-[10px] font-semibold uppercase text-ink">LA Will-Call</div>
+              <div class="text-[10px] text-secondary">& Nationwide Ship</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 2. PRODUCT INFORMATION TABS (DOORS LA STRUCTURE) ================= -->
+    <section class="mt-10 sm:mt-12 border border-hairline bg-white">
+      <!-- Tab Headers -->
+      <div class="flex items-center border-b border-hairline bg-surface-low overflow-x-auto no-scrollbar" id="pdp-tabs-bar">
+        <button onclick="switchPdpTab('description', this)" class="pdp-tab-btn px-5 py-3.5 font-label text-[11px] font-semibold uppercase tracking-wider text-ink bg-white border-b-2 border-gold whitespace-nowrap">
+          Description
+        </button>
+        <button onclick="switchPdpTab('technical', this)" class="pdp-tab-btn px-5 py-3.5 font-label text-[11px] font-medium uppercase tracking-wider text-on-surface-variant hover:text-ink border-b-2 border-transparent whitespace-nowrap">
+          Technical Information
+        </button>
+        <button onclick="switchPdpTab('shipping', this)" class="pdp-tab-btn px-5 py-3.5 font-label text-[11px] font-medium uppercase tracking-wider text-on-surface-variant hover:text-ink border-b-2 border-transparent whitespace-nowrap">
+          Shipping & Will-Call
+        </button>
+        <button onclick="switchPdpTab('howtobuy', this)" class="pdp-tab-btn px-5 py-3.5 font-label text-[11px] font-medium uppercase tracking-wider text-on-surface-variant hover:text-ink border-b-2 border-transparent whitespace-nowrap">
+          How to Order
+        </button>
+        <button onclick="switchPdpTab('reviews', this)" class="pdp-tab-btn px-5 py-3.5 font-label text-[11px] font-medium uppercase tracking-wider text-on-surface-variant hover:text-ink border-b-2 border-transparent whitespace-nowrap">
+          Customer Reviews
+        </button>
+      </div>
+
+      <!-- Tab 1: Description (Construction, Key Benefits, Good to Know) -->
+      <div class="pdp-tab-pane active p-5 sm:p-7" id="pdp-tab-description">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="space-y-2">
+            <span class="font-label text-[10px] uppercase tracking-widest text-gold-dark font-semibold">01 / Architecture</span>
+            <h3 class="font-headline text-base uppercase text-ink font-medium">Solid Core Construction</h3>
+            <p class="text-xs text-on-surface-variant leading-relaxed" id="desc-construction">
+              Engineered multi-layer acoustic core stabilized with perimeter hardwood stiles and extruded aluminum alignment channels to prevent warping across ceiling-height spans.
+            </p>
+          </div>
+          <div class="space-y-2">
+            <span class="font-label text-[10px] uppercase tracking-widest text-gold-dark font-semibold">02 / Advantages</span>
+            <h3 class="font-headline text-base uppercase text-ink font-medium">Key Benefits</h3>
+            <ul class="text-xs text-on-surface-variant space-y-1.5 leading-relaxed list-disc pl-4">
+              <li>Sits 100% flush with drywall, plaster, or wood wall paneling without bulky trim casings.</li>
+              <li>Factory pre-milled for concealed 3D adjustable hinges and silent magnetic mortise locks.</li>
+              <li>High acoustic attenuation for bedrooms, offices, and private suites.</li>
+            </ul>
+          </div>
+          <div class="space-y-2">
+            <span class="font-label text-[10px] uppercase tracking-widest text-gold-dark font-semibold">03 / Installation</span>
+            <h3 class="font-headline text-base uppercase text-ink font-medium">Good to Know</h3>
+            <p class="text-xs text-on-surface-variant leading-relaxed">
+              Concealed aluminum subframes install directly onto wood or metal studs prior to final drywall mudding. Compatible with single swing, pocket cavity, bypass, and concealed barn hardware.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Technical Information -->
+      <div class="pdp-tab-pane p-5 sm:p-7" id="pdp-tab-technical">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2 text-xs" id="pdp-tech-specs-table"></div>
+      </div>
+
+      <!-- Tab 3: Shipping & Will-Call -->
+      <div class="pdp-tab-pane p-5 sm:p-7" id="pdp-tab-shipping">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-on-surface-variant leading-relaxed">
+          <div>
+            <h4 class="font-headline text-sm uppercase text-ink font-semibold mb-1.5">Order Confirmations</h4>
+            <p>Once you submit a Quote Request, an architectural specialist verifies your rough opening dimensions, handing direction, and hardware prep within 24 business hours before finalizing your order.</p>
+          </div>
+          <div>
+            <h4 class="font-headline text-sm uppercase text-ink font-semibold mb-1.5">Protective Crating & Delivery</h4>
+            <p>All door slabs and aluminum subframes ship in reinforced wooden A-frame crates with insured curbside or jobsite delivery across California and nationwide.</p>
+          </div>
+          <div>
+            <h4 class="font-headline text-sm uppercase text-ink font-semibold mb-1.5">Showroom Will-Call Service</h4>
+            <p>Complimentary local Will-Call pickup is available from our Los Angeles warehouse Monday – Friday, 9:00 AM – 5:00 PM upon order readiness notification.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 4: How to Order (Step-by-Step Guide) -->
+      <div class="pdp-tab-pane p-5 sm:p-7" id="pdp-tab-howtobuy">
+        <h3 class="font-headline text-sm uppercase text-ink font-semibold mb-4">Step-by-Step Door Ordering Guide</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-4 bg-surface-low border border-hairline">
+            <div class="font-mono text-xs font-bold text-gold-dark mb-1">STEP 01</div>
+            <div class="font-headline text-sm uppercase text-ink font-medium">Configure Your Door</div>
+            <p class="text-xs text-on-surface-variant mt-1">Select your finish, mechanical system, slab height, width, handing, and frame kit above.</p>
+          </div>
+          <div class="p-4 bg-surface-low border border-hairline">
+            <div class="font-mono text-xs font-bold text-gold-dark mb-1">STEP 02</div>
+            <div class="font-headline text-sm uppercase text-ink font-medium">Request a Quote</div>
+            <p class="text-xs text-on-surface-variant mt-1">Click "Request a Quote" and enter your contact and delivery details in the order menu.</p>
+          </div>
+          <div class="p-4 bg-surface-low border border-hairline">
+            <div class="font-mono text-xs font-bold text-gold-dark mb-1">STEP 03</div>
+            <div class="font-headline text-sm uppercase text-ink font-medium">Spec Verification</div>
+            <p class="text-xs text-on-surface-variant mt-1">Our specialist confirms rough-opening measurements, lead times, and any volume discounts.</p>
+          </div>
+          <div class="p-4 bg-surface-low border border-hairline">
+            <div class="font-mono text-xs font-bold text-gold-dark mb-1">STEP 04</div>
+            <div class="font-headline text-sm uppercase text-ink font-medium">Production & Delivery</div>
+            <p class="text-xs text-on-surface-variant mt-1">Your doors are prepped, crated, and dispatched to your jobsite or staged for Will-Call.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 5: Customer Reviews -->
+      <div class="pdp-tab-pane p-5 sm:p-7" id="pdp-tab-reviews">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="pdp-reviews-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= 3. RELATED DOORS SECTION ================= -->
+    <section class="mt-10 sm:mt-12">
+      <div class="flex items-end justify-between mb-4">
+        <div>
+          <span class="font-label text-[10px] uppercase tracking-[0.22em] text-gold-dark font-semibold">Similar Specifications</span>
+          <h2 class="font-headline text-lg sm:text-xl uppercase text-ink font-medium mt-0.5">Related Door Models</h2>
+        </div>
+        <a href="catalog.html" class="font-label text-[11px] uppercase tracking-wider text-on-surface-variant hover:text-gold-dark">View All →</a>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="pdp-related-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full bg-surface-low border-t border-hairline py-6 mt-12">
+    <div class="max-w-fhd mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-2 font-label text-[10px] text-secondary uppercase tracking-wider">
+      <span id="footer-copyright">© 2026 DOORS GALLERY. ALL RIGHTS RESERVED.</span>
+      <a href="catalog.html" class="text-gold-dark hover:underline">← Back to Full Door Catalog</a>
+    </div>
+  </footer>
+
+  <!-- ================= REQUEST A QUOTE ORDER MENU (SLIDE-OVER DRAWER) ================= -->
+  <div class="quote-modal-backdrop" id="quote-order-backdrop" onclick="closeQuoteOrderMenu()"></div>
+  <aside class="quote-order-drawer" id="quote-order-drawer" aria-labelledby="quote-order-title">
+    <div class="p-4 sm:p-5 border-b border-hairline bg-surface-low flex items-center justify-between">
+      <div>
+        <span class="font-label text-[10px] uppercase tracking-[0.2em] text-gold-dark font-semibold">Direct Order Inquiry</span>
+        <h3 class="font-headline text-base font-semibold uppercase text-ink" id="quote-order-title">Request a Quote</h3>
+      </div>
+      <button type="button" onclick="closeQuoteOrderMenu()" class="w-8 h-8 border border-hairline bg-white text-secondary hover:text-ink flex items-center justify-center">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+      <!-- Selected Product & Configuration Summary Box -->
+      <div class="p-3.5 bg-surface-low border border-hairline border-l-[3px] border-l-gold flex gap-3 items-start" id="quote-menu-product-summary"></div>
+
+      <!-- Order Form View -->
+      <form id="product-quote-form" onsubmit="submitProductQuoteOrder(event)" class="space-y-3.5">
+        <div>
+          <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Full Name *</label>
+          <input type="text" id="qo-name" required placeholder="e.g. Michael Vance" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none"/>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Phone Number *</label>
+            <input type="tel" id="qo-phone" required placeholder="(310) 555-0199" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none"/>
+          </div>
+          <div>
+            <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Email Address *</label>
+            <input type="email" id="qo-email" required placeholder="name@email.com" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none"/>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Customer Role</label>
+            <select id="qo-role" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none">
+              <option value="Homeowner">Homeowner</option>
+              <option value="Contractor / Builder">Contractor / Builder</option>
+              <option value="Architect / Designer">Architect / Designer</option>
+              <option value="Developer">Developer</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Delivery Option</label>
+            <select id="qo-delivery-method" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none">
+              <option value="Jobsite / Home Delivery">Jobsite / Home Delivery</option>
+              <option value="LA Showroom Will-Call">LA Showroom Will-Call</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Delivery City, State / ZIP *</label>
+          <input type="text" id="qo-location" required placeholder="e.g. Los Angeles, CA 90048" class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none"/>
+        </div>
+
+        <div>
+          <label class="block font-label text-[10px] uppercase tracking-wider text-secondary mb-1">Project / Rough Opening Notes (Optional)</label>
+          <textarea id="qo-notes" rows="3" placeholder="Wall thickness, custom height requests, target delivery timeline..." class="w-full bg-surface-low border border-hairline focus:border-gold focus:bg-white px-3 py-2 text-xs text-ink outline-none"></textarea>
+        </div>
+
+        <button type="submit" class="w-full bg-ink text-gold-light border border-gold/60 hover:bg-gold hover:text-white py-3 font-label text-xs font-semibold uppercase tracking-[0.18em] transition-colors flex items-center justify-center gap-2">
+          <span>Submit Quote Request</span>
+          <span class="material-symbols-outlined text-[16px]">send</span>
+        </button>
+      </form>
+
+      <!-- Confirmation State (Shown after saving) -->
+      <div id="quote-order-confirmation" class="hidden p-5 bg-gold-tint border border-gold text-center space-y-3">
+        <span class="material-symbols-outlined text-3xl text-gold-dark">verified</span>
+        <div class="font-headline text-base uppercase text-ink font-semibold">Quote Request Received!</div>
+        <div class="font-mono text-xs text-gold-dark font-semibold" id="quote-order-ref">Order Ref: #ORD-0000</div>
+        <p class="text-xs text-on-surface-variant leading-relaxed">
+          Your configured door request has been logged into our showroom pipeline. A specialist will contact you shortly to confirm specifications and finalize your order.
+        </p>
+        <div class="pt-2 flex flex-col gap-2">
+          <button type="button" onclick="closeQuoteOrderMenu()" class="w-full bg-ink text-gold-light py-2.5 font-label text-[11px] uppercase tracking-widest">
+            Continue Browsing
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MULTI-DOOR SPEC LIST DRAWER ================= -->
+  <div class="spec-drawer-backdrop" id="drawer-backdrop" onclick="toggleSpecDrawer(false)"></div>
+  <aside class="spec-drawer" id="spec-drawer">
+    <div class="p-4 sm:p-5 border-b border-hairline flex items-center justify-between bg-surface-low">
+      <div>
+        <h3 class="font-headline text-sm font-semibold uppercase text-ink">Specification List</h3>
+        <p class="text-[11px] text-secondary mt-0.5" id="drawer-item-count">0 door models selected</p>
+      </div>
+      <button onclick="toggleSpecDrawer(false)" class="text-secondary hover:text-ink p-1.5">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3" id="drawer-items-container"></div>
+
+    <div class="p-4 sm:p-5 border-t border-hairline bg-surface-low space-y-3">
+      <div class="flex items-center justify-between">
+        <span class="font-label text-[11px] uppercase tracking-wider text-secondary">Estimated Schedule Total</span>
+        <span class="font-headline text-base font-semibold text-gold-dark" id="drawer-total-val">$0</span>
+      </div>
+      <a href="index.html#inquiry" onclick="toggleSpecDrawer(false)" class="block w-full bg-ink text-gold-light hover:bg-gold hover:text-white py-2.5 text-center font-label text-[11px] uppercase tracking-widest transition-colors">
+        Submit Full Schedule
+      </a>
+    </div>
+  </aside>
+
+  <script type="module" src="js/product.js"></script>
+</body>
+</html>

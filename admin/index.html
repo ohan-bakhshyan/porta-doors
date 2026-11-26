@@ -75,7 +75,7 @@
 
       <div class="nav-item" data-tab="inquiries">
         <div class="nav-item-left">
-          <span>Spec Inquiries</span>
+          <span>Order Requests</span>
         </div>
         <span class="badge-counter" id="badge-inquiries-count">0</span>
       </div>
@@ -149,24 +149,24 @@
           </div>
         </div>
 
-        <!-- Quick Activity Logs / Recent Inquiries -->
-        <div class="section-header" style="margin-top: 32px;">
+        <!-- Quick Activity Logs / Recent Order Requests -->
+        <div class="section-header" style="margin-top: 28px;">
           <div>
-            <h3 class="section-title" style="font-size: 16px;">Recent Trade Inquiries</h3>
-            <p class="section-desc">Latest submissions from Architects and Specifiers.</p>
+            <h3 class="section-title" style="font-size: 15px;">Recent Order & Quote Requests</h3>
+            <p class="section-desc">Latest customer quote requests and deal pipeline stages.</p>
           </div>
-          <button class="btn btn-secondary btn-sm" onclick="switchTab('inquiries')">View All Inquiries →</button>
+          <button class="btn btn-secondary btn-sm" onclick="switchTab('inquiries')">Open Deal Pipeline →</button>
         </div>
         <div class="table-container">
           <table class="data-table">
             <thead>
               <tr>
-                <th>Inquiry ID</th>
-                <th>Architect / Studio</th>
-                <th>Typology</th>
+                <th>Order / Ref</th>
+                <th>Customer</th>
+                <th>Delivery / Role</th>
                 <th>Location</th>
-                <th>Doors</th>
-                <th>Status</th>
+                <th>Deal Value</th>
+                <th>Pipeline Stage</th>
                 <th>Date</th>
               </tr>
             </thead>
@@ -387,27 +387,60 @@
         </div>
       </section>
 
-      <!-- TAB 8: SPEC INQUIRIES -->
+      <!-- TAB 8: ORDER REQUESTS & DEAL PIPELINE -->
       <section class="tab-pane" id="tab-inquiries">
         <div class="section-header">
           <div>
-            <h2 class="section-title">Architectural Specification Inquiries</h2>
-            <p class="section-desc">Review submitted door schedules, preliminary openings counts, and CAD attachments.</p>
+            <h2 class="section-title">Order Requests & Deal Pipeline</h2>
+            <p class="section-desc">Process customer quote requests from Single Product Pages and Schedules through each pipeline stage to close deals.</p>
           </div>
+        </div>
+
+        <!-- Deal Pipeline KPI Summary -->
+        <div class="kpi-grid" style="margin-bottom: 18px;">
+          <div class="kpi-card">
+            <span class="kpi-label">New Requests</span>
+            <span class="kpi-value" id="pipe-kpi-new">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">In Active Pipeline</span>
+            <span class="kpi-value" id="pipe-kpi-active">0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Open Pipeline Value</span>
+            <span class="kpi-value" id="pipe-kpi-open-val">$0</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Closed Won Revenue</span>
+            <span class="kpi-value" id="pipe-kpi-won-val" style="color:#047857;">$0</span>
+          </div>
+        </div>
+
+        <!-- Stage Filter Bar -->
+        <div class="filter-bar" style="justify-content: space-between;">
+          <div style="display:flex; flex-wrap:wrap; gap:6px;" id="pipeline-stage-filters">
+            <button class="pipeline-filter-pill active" data-stage="all" onclick="filterPipelineStage('all')">All Requests</button>
+            <button class="pipeline-filter-pill" data-stage="new" onclick="filterPipelineStage('new')">New Request</button>
+            <button class="pipeline-filter-pill" data-stage="contacted" onclick="filterPipelineStage('contacted')">Contacted</button>
+            <button class="pipeline-filter-pill" data-stage="quoted" onclick="filterPipelineStage('quoted')">Quote Sent</button>
+            <button class="pipeline-filter-pill" data-stage="negotiation" onclick="filterPipelineStage('negotiation')">Negotiation</button>
+            <button class="pipeline-filter-pill" data-stage="won" onclick="filterPipelineStage('won')">Deal Won ✓</button>
+            <button class="pipeline-filter-pill" data-stage="lost" onclick="filterPipelineStage('lost')">Closed Lost</button>
+          </div>
+          <input type="text" id="pipeline-search-input" class="filter-input" style="max-width:240px;" placeholder="Search ID, name, phone, SKU..." oninput="renderInquiriesTable()">
         </div>
 
         <div class="table-container">
           <table class="data-table">
             <thead>
               <tr>
-                <th>ID</th>
+                <th>Order ID</th>
                 <th>Date</th>
-                <th>Contact & Studio</th>
-                <th>Location</th>
-                <th>Classification</th>
-                <th>Doors Schedule</th>
-                <th>Attachments</th>
-                <th>Status</th>
+                <th>Customer & Contact</th>
+                <th>Delivery / Location</th>
+                <th>Configured Doors</th>
+                <th>Deal Value</th>
+                <th>Pipeline Stage</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -1033,17 +1066,18 @@
   </div>
 </div>
 
-<!-- 10. INQUIRY DETAILS MODAL -->
+<!-- 10. ORDER REQUEST & DEAL PIPELINE MODAL -->
 <div class="modal-backdrop" id="modal-inquiry">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="max-width:740px;">
     <div class="modal-header">
-      <h3 class="modal-title" id="inquiry-modal-title">Specification Inquiry Dossier</h3>
+      <h3 class="modal-title" id="inquiry-modal-title">Order Request & Deal Dossier</h3>
       <span class="modal-close" onclick="closeModal('modal-inquiry')">✕</span>
     </div>
     <div class="modal-body" id="inquiry-modal-body"></div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-inquiry')">Close</button>
-      <button type="button" class="btn btn-primary" id="inquiry-toggle-status-btn">Toggle Status</button>
+      <button type="button" class="btn btn-secondary" onclick="closeModal('modal-inquiry')">Cancel</button>
+      <button type="button" class="btn btn-secondary" id="inquiry-save-btn">Save Pipeline Update</button>
+      <button type="button" class="btn btn-primary" id="inquiry-win-btn">✓ Close Deal (Mark Won)</button>
     </div>
   </div>
 </div>

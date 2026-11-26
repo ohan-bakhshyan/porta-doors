@@ -130,19 +130,21 @@
 
         return `
           <article class="bg-white border border-hairline hover:border-gold/70 transition-all flex flex-col shadow-xs">
-            <div class="aspect-[4/4.5] overflow-hidden bg-surface-container">
+            <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="aspect-[4/4.5] overflow-hidden bg-surface-container block">
               <img src="${primaryImg}" class="w-full h-full object-cover" alt="${Utils.escapeHtml(door.name)}"/>
-            </div>
+            </a>
             <div class="p-3.5 flex flex-col justify-between flex-grow">
               <div>
                 <span class="font-label text-[10px] text-secondary uppercase">${Utils.escapeHtml(door.sku)}</span>
-                <h3 class="font-headline text-sm font-medium uppercase text-ink mt-0.5">${Utils.escapeHtml(door.name)}</h3>
+                <h3 class="font-headline text-sm font-medium uppercase text-ink mt-0.5">
+                  <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="hover:text-gold-dark transition-colors">${Utils.escapeHtml(door.name)}</a>
+                </h3>
                 <p class="text-[11px] text-on-surface-variant mt-1 line-clamp-2">${Utils.escapeHtml(door.shortDescription || '')}</p>
               </div>
               <div class="mt-3 pt-2.5 border-t border-hairline flex items-center justify-between">
                 <span class="font-headline text-sm font-semibold text-gold-dark">${Utils.formatCurrency(priceInfo.effectivePrice)}</span>
-                <a href="catalog.html?brand=${encodeURIComponent(brand.slug)}" class="border border-gold bg-white text-ink hover:bg-ink hover:text-gold-light font-label text-[10px] uppercase tracking-wider px-2.5 py-1.5 transition-colors">
-                  Explore
+                <a href="product.html?slug=${encodeURIComponent(door.slug)}" class="border border-gold bg-white text-ink hover:bg-ink hover:text-gold-light font-label text-[10px] uppercase tracking-wider px-2.5 py-1.5 transition-colors">
+                  Request Quote
                 </a>
               </div>
             </div>

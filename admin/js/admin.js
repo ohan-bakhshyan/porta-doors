@@ -64,7 +64,7 @@ window.switchTab = function(tabName) {
     systems: '8 Mechanical Typologies',
     promotions: 'Promotions & Product Groups',
     projects: 'Completed Case Studies',
-    inquiries: 'Specification Inquiries',
+    inquiries: 'Order Requests & Deal Pipeline',
     settings: 'Showroom Settings & Security'
   };
   if (titleEl) titleEl.textContent = titles[tabName] || 'Overview';
@@ -154,17 +154,19 @@ function updateDashboardKpis() {
     return;
   }
 
-  tbody.innerHTML = recent.map(i => `
+  tbody.innerHTML = recent.map(i => {
+    const dealVal = Number(i.dealValue ?? i.totalEstimate) || 0;
+    return `
     <tr>
       <td style="font-family:var(--font-mono); font-weight:600;">${Utils.escapeHtml(i.id)}</td>
-      <td><strong>${Utils.escapeHtml(i.contactName || 'Trade Client')}</strong></td>
-      <td>${Utils.escapeHtml(i.projectType || 'Residential')}</td>
-      <td>${Utils.escapeHtml(i.projectLocation || 'Unspecified')}</td>
-      <td>${i.items?.length || 0} Doors</td>
-      <td><span class="status-pill ${i.status === 'new' ? 'status-active' : 'status-inactive'}">${i.status.toUpperCase()}</span></td>
+      <td><strong>${Utils.escapeHtml(i.contactName || 'Client')}</strong></td>
+      <td>${Utils.escapeHtml(i.projectType || 'Order Quote')}</td>
+      <td>${Utils.escapeHtml(i.projectLocation || '—')}</td>
+      <td style="font-family:var(--font-mono); font-weight:600; color:var(--color-gold-dark);">${Utils.formatCurrency(dealVal)}</td>
+      <td>${renderStageBadge(i.status)}</td>
       <td style="font-family:var(--font-mono); font-size:11px;">${Utils.formatDate(i.createdAt)}</td>
     </tr>
-  `).join('');
+  `}).join('');
 }
 
 /* ================= 4. DOORS MANAGEMENT ================= */
@@ -212,7 +214,7 @@ function renderDoorsTable() {
           <img src="${primaryImg}" class="table-thumb" alt="${Utils.escapeHtml(door.name)}">
         </td>
         <td>
-          <strong>${Utils.escapeHtml(door.name)}</strong>
+          <a href="../front/product.html?slug=${encodeURIComponent(door.slug)}" target="_blank" style="text-decoration:underline; color:var(--color-primary);"><strong>${Utils.escapeHtml(door.name)} ↗</strong></a>
           <div style="font-size:11px; color:var(--color-secondary); font-family:var(--font-mono);">${door.slug}</div>
         </td>
         <td style="font-family:var(--font-mono); font-weight:600;">${Utils.escapeHtml(door.sku)}</td>
@@ -1252,117 +1254,294 @@ window.deleteProject = function(id) {
   }
 };
 
-/* ================= 10. SPEC INQUIRIES ================= */
+/* ================= 10. ORDER REQUESTS & DEAL PIPELINE ================= */
+const PIPELINE_STAGES = [
+  { key: 'new', label: 'New Request' },
+  { key: 'contacted', label: 'Contacted' },
+  { key: 'quoted', label: 'Quote Sent' },
+  { key: 'negotiation', label: 'Negotiation' },
+  { key: 'won', label: 'Deal Won ✓' },
+  { key: 'lost', label: 'Closed Lost' }
+];
+
+let activePipelineFilter = 'all';
+
+function getStageLabel(status) {
+  return PIPELINE_STAGES.find(s => s.key === status)?.label || (status || 'new').toUpperCase();
+}
+
+function renderStageBadge(status) {
+  const st = status || 'new';
+  return `<span class="stage-badge stage-${Utils.escapeHtml(st)}">${Utils.escapeHtml(getStageLabel(st))}</span>`;
+}
+
+window.filterPipelineStage = function(stageKey) {
+  activePipelineFilter = stageKey;
+  document.querySelectorAll('#pipeline-stage-filters .pipeline-filter-pill').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.stage === stageKey);
+  });
+  renderInquiriesTable();
+};
+
+function computeInquiryValue(inq) {
+  if (inq.dealValue !== undefined && inq.dealValue !== null) return Number(inq.dealValue) || 0;
+  if (inq.totalEstimate !== undefined && inq.totalEstimate !== null) return Number(inq.totalEstimate) || 0;
+  return (inq.items || []).reduce((sum, it) => sum + ((Number(it.effectivePrice || it.basePrice) || 0) * (Number(it.quantity) || 1)), 0);
+}
+
+function updatePipelineKpis(allInquiries) {
+  const newCount = allInquiries.filter(i => (i.status || 'new') === 'new').length;
+  const activeStages = ['contacted', 'quoted', 'negotiation'];
+  const activeList = allInquiries.filter(i => activeStages.includes(i.status));
+  const openDeals = allInquiries.filter(i => !['won', 'lost'].includes(i.status || 'new'));
+  const wonDeals = allInquiries.filter(i => i.status === 'won');
+
+  const openVal = openDeals.reduce((s, i) => s + computeInquiryValue(i), 0);
+  const wonVal = wonDeals.reduce((s, i) => s + computeInquiryValue(i), 0);
+
+  const setEl = (id, txt) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  };
+  setEl('pipe-kpi-new', newCount);
+  setEl('pipe-kpi-active', activeList.length);
+  setEl('pipe-kpi-open-val', Utils.formatCurrency(openVal));
+  setEl('pipe-kpi-won-val', `${Utils.formatCurrency(wonVal)} (${wonDeals.length})`);
+}
+
 function renderInquiriesTable() {
   const tbody = document.getElementById('inquiries-table-body');
   if (!tbody) return;
 
-  const inquiries = store.getInquiries();
-  if (inquiries.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding:24px; color:var(--color-secondary);">No specification inquiries received.</td></tr>';
+  const allInquiries = store.getInquiries();
+  updatePipelineKpis(allInquiries);
+
+  const searchQ = (document.getElementById('pipeline-search-input')?.value || '').toLowerCase().trim();
+
+  const filtered = allInquiries.filter(inq => {
+    const st = inq.status || 'new';
+    if (activePipelineFilter !== 'all' && st !== activePipelineFilter) return false;
+    if (searchQ) {
+      const itemSkus = (inq.items || []).map(it => `${it.sku || ''} ${it.doorName || it.name || ''}`).join(' ').toLowerCase();
+      const hay = `${inq.id} ${inq.contactName || ''} ${inq.contactEmail || ''} ${inq.contactPhone || ''} ${inq.projectLocation || ''} ${itemSkus}`.toLowerCase();
+      if (!hay.includes(searchQ)) return false;
+    }
+    return true;
+  });
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:28px; color:var(--color-secondary);">No order requests found in this pipeline stage.</td></tr>';
     return;
   }
 
-  tbody.innerHTML = inquiries.map(inq => `
-    <tr>
-      <td style="font-family:var(--font-mono); font-weight:600;">${inq.id}</td>
-      <td style="font-family:var(--font-mono); font-size:11px;">${Utils.formatDate(inq.createdAt)}</td>
-      <td>
-        <strong>${Utils.escapeHtml(inq.contactName)}</strong>
-        <div style="font-size:11px; color:var(--color-secondary);">${Utils.escapeHtml(inq.contactEmail)}</div>
-      </td>
-      <td>${Utils.escapeHtml(inq.projectLocation || '—')}</td>
-      <td><span class="status-pill status-active">${inq.projectType || 'Residential'}</span></td>
-      <td>${inq.items?.length || 0} Model(s)</td>
-      <td style="font-size:11px; font-family:var(--font-mono);">${inq.fileName ? `📎 ${Utils.escapeHtml(inq.fileName)}` : 'None'}</td>
-      <td>
-        <span class="status-pill ${inq.status === 'new' ? 'status-active' : 'status-inactive'}">
-          ${inq.status.toUpperCase()}
-        </span>
-      </td>
-      <td>
-        <div style="display:flex; gap:6px;">
-          <button class="btn btn-secondary btn-sm" onclick="viewInquiryDossier('${inq.id}')">View Dossier</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteInquiry('${inq.id}')">✕</button>
-        </div>
-      </td>
-    </tr>
-  `).join('');
+  tbody.innerHTML = filtered.map(inq => {
+    const dealVal = computeInquiryValue(inq);
+    const totalDoors = (inq.items || []).reduce((s, it) => s + (Number(it.quantity) || 1), 0);
+    const firstItem = (inq.items || [])[0];
+    const itemsSummary = firstItem
+      ? `<strong>${Utils.escapeHtml(firstItem.doorName || firstItem.name)}</strong> ${inq.items.length > 1 ? `+${inq.items.length - 1} more` : ''}<div style="font-size:10px; color:var(--color-secondary);">${totalDoors} door(s) ${firstItem.dimensions ? `• ${Utils.escapeHtml(firstItem.dimensions)}` : ''}</div>`
+      : `<span style="color:var(--color-secondary); font-size:11px;">Custom Spec (${Utils.escapeHtml(inq.openingsCount || 'TBD')})</span>`;
+
+    return `
+      <tr>
+        <td>
+          <div style="font-family:var(--font-mono); font-weight:600; color:var(--color-primary);">${Utils.escapeHtml(inq.id)}</div>
+          <span class="stage-badge stage-${Utils.escapeHtml(inq.status || 'new')}" style="margin-top:3px;">${Utils.escapeHtml(getStageLabel(inq.status || 'new'))}</span>
+        </td>
+        <td style="font-family:var(--font-mono); font-size:11px;">${Utils.formatDate(inq.createdAt)}</td>
+        <td>
+          <strong>${Utils.escapeHtml(inq.contactName || 'Customer')}</strong>
+          <div style="font-size:11px; color:var(--color-secondary);">${Utils.escapeHtml(inq.contactPhone || '')} ${inq.contactPhone && inq.contactEmail ? '•' : ''} ${Utils.escapeHtml(inq.contactEmail || '')}</div>
+        </td>
+        <td>
+          <div>${Utils.escapeHtml(inq.projectLocation || '—')}</div>
+          <div style="font-size:10px; color:var(--color-secondary);">${Utils.escapeHtml(inq.deliveryMethod || inq.projectType || 'Standard')}</div>
+        </td>
+        <td>${itemsSummary}</td>
+        <td style="font-family:var(--font-mono); font-weight:600; color:var(--color-gold-dark);">
+          ${Utils.formatCurrency(dealVal)}
+        </td>
+        <td>
+          <select class="pipeline-select" onchange="quickChangePipelineStage('${inq.id}', this.value)">
+            ${PIPELINE_STAGES.map(st => `<option value="${st.key}" ${(inq.status || 'new') === st.key ? 'selected' : ''}>${st.label}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <div style="display:flex; gap:5px; flex-wrap:wrap;">
+            <button class="btn btn-secondary btn-sm" onclick="viewInquiryDossier('${inq.id}')">Manage Deal</button>
+            ${inq.status !== 'won' ? `<button class="btn btn-primary btn-sm" onclick="quickChangePipelineStage('${inq.id}', 'won')" title="Mark Deal Closed Won">✓ Win</button>` : ''}
+            <button class="btn btn-danger btn-sm" onclick="deleteInquiry('${inq.id}')" title="Delete">✕</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
 }
+
+window.quickChangePipelineStage = function(id, newStatus) {
+  store.updateInquiryStatus(id, newStatus, `Stage changed to ${getStageLabel(newStatus)}`);
+  renderInquiriesTable();
+  updateDashboardKpis();
+  updateBadgeCounts();
+  showToast(`Order ${id} moved to "${getStageLabel(newStatus)}"`);
+};
 
 window.viewInquiryDossier = function(id) {
   const inq = store.getInquiries().find(i => i.id === id);
   if (!inq) return;
 
   const modal = document.getElementById('modal-inquiry');
+  const titleEl = document.getElementById('inquiry-modal-title');
   const body = document.getElementById('inquiry-modal-body');
+  if (titleEl) titleEl.textContent = `Order Request & Deal Dossier — ${inq.id}`;
 
-  const itemsHtml = (inq.items || []).map(item => `
-    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--color-surface-container);">
-      <div>
-        <strong>${Utils.escapeHtml(item.doorName || item.name || 'Door Model')}</strong> 
-        <span style="font-family:var(--font-mono); color:var(--color-secondary);">(${item.sku || 'SKU'})</span>
-        <div style="font-size:11px; color:var(--color-secondary);">Qty: ${item.quantity} | Finish: ${Utils.escapeHtml(item.finish || 'Standard')}</div>
+  const dealVal = computeInquiryValue(inq);
+
+  const itemsHtml = (inq.items || []).map(item => {
+    const unitPrice = Number(item.effectivePrice || item.basePrice) || 0;
+    const qty = Number(item.quantity) || 1;
+    return `
+      <div style="display:flex; gap:12px; justify-content:space-between; padding:10px; background:var(--color-surface-low); border:1px solid var(--color-outline-variant); margin-bottom:8px;">
+        <div style="display:flex; gap:10px; align-items:flex-start;">
+          ${item.primaryImage ? `<img src="${item.primaryImage}" style="width:42px; height:52px; object-fit:cover; border:1px solid var(--color-outline-variant);">` : ''}
+          <div>
+            <strong>${Utils.escapeHtml(item.doorName || item.name || 'Door Model')}</strong>
+            <span style="font-family:var(--font-mono); font-size:11px; color:var(--color-secondary);">(${Utils.escapeHtml(item.sku || 'SKU')})</span>
+            <div style="font-size:11px; color:var(--color-on-surface-variant); margin-top:2px;">
+              Qty: <strong>${qty}</strong> × ${Utils.formatCurrency(unitPrice)}
+              ${item.dimensions ? ` • Size: <strong>${Utils.escapeHtml(item.dimensions)}</strong>` : ''}
+              • Finish: <strong>${Utils.escapeHtml(item.finish || 'Standard')}</strong>
+            </div>
+            ${(item.systemName || item.frameOption || item.handing) ? `
+              <div style="font-size:10px; color:var(--color-secondary); margin-top:2px;">
+                ${item.systemName ? `System: ${Utils.escapeHtml(item.systemName)}` : ''}
+                ${item.frameOption ? ` | ${Utils.escapeHtml(item.frameOption)}` : ''}
+                ${item.handing ? ` | ${Utils.escapeHtml(item.handing)}` : ''}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+        <div style="font-family:var(--font-mono); font-weight:600; color:var(--color-gold-dark); white-space:nowrap;">
+          ${Utils.formatCurrency(unitPrice * qty)}
+        </div>
       </div>
-      <div style="font-family:var(--font-mono); font-weight:600;">
-        ${Utils.formatCurrency((item.effectivePrice || item.basePrice || 0) * item.quantity)}
-      </div>
+    `;
+  }).join('');
+
+  const historyHtml = (inq.stageHistory || []).map(h => `
+    <div style="display:flex; justify-content:space-between; font-size:11px; padding:4px 0; border-bottom:1px dashed var(--color-outline-variant);">
+      <span><strong>${Utils.escapeHtml(getStageLabel(h.status))}</strong> — ${Utils.escapeHtml(h.note || '')}</span>
+      <span style="font-family:var(--font-mono); color:var(--color-secondary);">${Utils.formatDate(h.timestamp)}</span>
     </div>
   `).join('');
 
   body.innerHTML = `
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-bottom:20px;">
-      <div>
-        <label class="form-label">Contact / Studio</label>
-        <div style="font-size:14px; font-weight:600;">${Utils.escapeHtml(inq.contactName)}</div>
-        <div style="font-size:12px; color:var(--color-secondary);">${Utils.escapeHtml(inq.contactEmail)} | ${Utils.escapeHtml(inq.contactPhone || 'No Phone')}</div>
+    <div class="form-grid" style="margin-bottom:16px;">
+      <div style="padding:12px; background:var(--color-surface-low); border:1px solid var(--color-outline-variant);">
+        <label class="form-label">Customer Details</label>
+        <div style="font-size:14px; font-weight:600; color:var(--color-primary); margin-top:3px;">${Utils.escapeHtml(inq.contactName || 'Customer')}</div>
+        <div style="font-size:12px; margin-top:3px;">
+          ${inq.contactPhone ? `<a href="tel:${inq.contactPhone}" style="color:var(--color-gold-dark); font-weight:600;">${Utils.escapeHtml(inq.contactPhone)}</a> • ` : ''}
+          <a href="mailto:${Utils.escapeHtml(inq.contactEmail || '')}" style="text-decoration:underline;">${Utils.escapeHtml(inq.contactEmail || '')}</a>
+        </div>
+        <div style="font-size:11px; color:var(--color-secondary); margin-top:3px;">Role: ${Utils.escapeHtml(inq.clientRole || inq.projectType || 'Direct Client')}</div>
       </div>
-      <div>
-        <label class="form-label">Project Typology & Location</label>
-        <div style="font-size:13px;">${Utils.escapeHtml(inq.projectType || 'Standard')} • ${Utils.escapeHtml(inq.projectLocation || 'Unspecified')}</div>
-        <div style="font-size:11px; color:var(--color-secondary);">Openings: ${Utils.escapeHtml(inq.openingsCount || 'Not specified')}</div>
+
+      <div style="padding:12px; background:var(--color-surface-low); border:1px solid var(--color-outline-variant);">
+        <label class="form-label">Fulfillment & Location</label>
+        <div style="font-size:13px; font-weight:600; margin-top:3px;">${Utils.escapeHtml(inq.projectLocation || 'Unspecified')}</div>
+        <div style="font-size:12px; color:var(--color-on-surface-variant); margin-top:3px;">Method: ${Utils.escapeHtml(inq.deliveryMethod || 'Standard Delivery')}</div>
+        <div style="font-size:11px; color:var(--color-secondary); margin-top:3px;">Submitted: ${Utils.formatDate(inq.createdAt)} ${inq.source ? `(${Utils.escapeHtml(inq.source)})` : ''}</div>
       </div>
     </div>
 
     ${inq.fileName ? `
-      <div style="padding:10px; background:var(--color-surface-low); margin-bottom:16px; font-size:12px;">
-        <strong>Attached Architectural Schedule:</strong> <code>${Utils.escapeHtml(inq.fileName)}</code>
+      <div style="padding:8px 12px; background:var(--color-gold-tint); border:1px solid var(--color-gold); margin-bottom:14px; font-size:12px;">
+        <strong>Attached Schedule:</strong> <code>${Utils.escapeHtml(inq.fileName)}</code>
       </div>
     ` : ''}
 
     <div style="margin-bottom:16px;">
-      <label class="form-label">Client Notes & Directives</label>
-      <div style="font-size:13px; line-height:1.5; padding:10px; background:var(--color-surface-low);">
+      <label class="form-label">Configured Door Items</label>
+      <div style="margin-top:6px;">${itemsHtml || '<div style="color:var(--color-secondary); font-size:12px;">General quote inquiry (no specific slab pre-selected).</div>'}</div>
+    </div>
+
+    <div style="margin-bottom:16px;">
+      <label class="form-label">Customer Request Notes</label>
+      <div style="font-size:12px; line-height:1.5; padding:10px; background:var(--color-surface-low); border:1px solid var(--color-outline-variant);">
         ${Utils.escapeHtml(inq.notes || 'No custom notes provided.')}
       </div>
     </div>
 
-    <div>
-      <label class="form-label">Scheduled Door Leaves</label>
-      <div style="margin-top:6px;">${itemsHtml || '<div style="color:var(--color-secondary); font-size:12px;">No specific doors pre-selected. General specification request.</div>'}</div>
+    <!-- Deal Pipeline Controls -->
+    <div style="padding:14px; background:var(--color-gold-tint); border:1px solid var(--color-gold); margin-bottom:14px;">
+      <div style="font-family:var(--font-headline); font-size:12px; font-weight:600; text-transform:uppercase; color:var(--color-primary); margin-bottom:10px;">
+        Process Deal Pipeline
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Pipeline Status</label>
+          <select id="dossier-stage-select" class="form-control">
+            ${PIPELINE_STAGES.map(st => `<option value="${st.key}" ${(inq.status || 'new') === st.key ? 'selected' : ''}>${st.label}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmed Deal Value ($)</label>
+          <input type="number" id="dossier-deal-value" class="form-control" min="0" value="${dealVal}">
+        </div>
+        <div class="form-group form-full">
+          <label class="form-label">Internal Sales / Closing Notes</label>
+          <textarea id="dossier-admin-notes" class="form-control" rows="2" placeholder="Add quote follow-up notes, rough opening verification, deposit or invoice ref...">${Utils.escapeHtml(inq.adminNotes || '')}</textarea>
+        </div>
+      </div>
     </div>
+
+    ${historyHtml ? `
+      <div>
+        <label class="form-label">Pipeline History</label>
+        <div style="margin-top:4px; max-height:110px; overflow-y:auto;">${historyHtml}</div>
+      </div>
+    ` : ''}
   `;
 
-  document.getElementById('inquiry-toggle-status-btn').onclick = () => {
-    const nextStatus = inq.status === 'new' ? 'contacted' : inq.status === 'contacted' ? 'quoted' : 'new';
-    store.updateInquiryStatus(id, nextStatus);
+  const saveDossier = (forcedStatus = null) => {
+    const selectedStatus = forcedStatus || document.getElementById('dossier-stage-select').value;
+    const updatedVal = Number(document.getElementById('dossier-deal-value').value) || 0;
+    const adminNotes = document.getElementById('dossier-admin-notes').value.trim();
+
+    store.updateInquiryDetails(id, {
+      status: selectedStatus,
+      dealValue: updatedVal,
+      adminNotes,
+      stageNote: forcedStatus === 'won'
+        ? `Deal closed WON at ${Utils.formatCurrency(updatedVal)}`
+        : `Updated stage to ${getStageLabel(selectedStatus)} (${Utils.formatCurrency(updatedVal)})`
+    });
+
     closeModal('modal-inquiry');
     renderInquiriesTable();
     updateDashboardKpis();
     updateBadgeCounts();
-    showToast(`Inquiry ${id} status set to ${nextStatus.toUpperCase()}`);
+    showToast(forcedStatus === 'won' ? `Deal ${id} Closed WON!` : `Order ${id} pipeline updated.`);
   };
+
+  document.getElementById('inquiry-save-btn').onclick = () => saveDossier(null);
+  const winBtn = document.getElementById('inquiry-win-btn');
+  if (winBtn) {
+    winBtn.style.display = inq.status === 'won' ? 'none' : 'inline-flex';
+    winBtn.onclick = () => saveDossier('won');
+  }
 
   modal.classList.add('open');
 };
 
 window.deleteInquiry = function(id) {
-  if (confirm(`Remove inquiry ${id}?`)) {
+  if (confirm(`Remove order request ${id}?`)) {
     store.deleteInquiry(id);
     renderInquiriesTable();
     updateDashboardKpis();
     updateBadgeCounts();
-    showToast('Inquiry removed.');
+    showToast('Order request removed.');
   }
 };
 

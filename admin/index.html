@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PORTA — Architectural Administration CMS</title>
+  <title>DOORS GALLERY — Showroom Administration CMS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared/css/variables.css">
   <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
 
 <div class="admin-shell">
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleAdminSidebar(false)"></div>
   <!-- Fixed Architectural Sidebar -->
-  <aside class="admin-sidebar">
+  <aside class="admin-sidebar" id="admin-sidebar">
     <div class="sidebar-header">
       <div class="admin-logo">
-        <span class="portal-dot"></span>
-        <span>PORTA</span> CMS
+        <img src="../shared/assets/logo-mark.png" alt="Doors Gallery" id="admin-sidebar-logo">
+        <span>DOORS GALLERY</span>
       </div>
-      <span class="admin-version">v2.0 ARCH</span>
+      <span class="admin-version">v3.0</span>
     </div>
 
     <nav class="sidebar-nav">
@@ -100,9 +101,12 @@
   <!-- Main Viewport -->
   <main class="admin-main">
     <header class="admin-topbar">
-      <div class="topbar-title" id="current-tab-title">Overview</div>
+      <div class="topbar-left">
+        <button class="mobile-sidebar-btn" onclick="toggleAdminSidebar()" aria-label="Menu">☰</button>
+        <div class="topbar-title" id="current-tab-title">Overview</div>
+      </div>
       <div class="topbar-actions">
-        <span style="font-size:11px; font-family:var(--font-mono); color:var(--color-secondary);">Zurich • Milan • Los Angeles</span>
+        <span style="font-size:11px; font-family:var(--font-mono); color:var(--color-gold-dark);">Doors Gallery CMS</span>
       </div>
     </header>
 
@@ -444,52 +448,60 @@
             <label class="form-label">Trade Specification Email</label>
             <input type="email" id="setting-email" class="form-control">
           </div>
-          <div class="form-group form-full">
+          <div class="form-group">
+            <label class="form-label">Brand Logo URL</label>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="setting-logoUrl" class="form-control" style="flex:1;" placeholder="../shared/assets/logo-mark.png">
+              <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
+                Upload Logo
+                <input type="file" accept="image/*" style="display:none;" onchange="handleLogoFileUpload(this)">
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="form-label">Certifications / Standards Text</label>
             <input type="text" id="setting-certifications" class="form-control">
           </div>
 
-          <!-- Hero Section Management -->
-          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
-            <h3 class="section-title" style="font-size: 15px;">2. Homepage Hero Section</h3>
+          <!-- 3 Rotating Hero Banners Management -->
+          <div class="form-full" style="border-bottom: 1px solid var(--color-outline-variant); padding-bottom: 10px; margin-top: 16px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+              <h3 class="section-title" style="font-size: 15px;">2. Rotating Hero Banners (3 Slides in Rotation)</h3>
+              <p class="section-desc">Manage the 3 rotating top banners displayed below the category menu bar.</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <label class="form-label" style="margin:0;">Rotation Speed (ms):</label>
+              <input type="number" id="setting-heroAutoplayMs" class="form-control" style="width:95px;" value="5000" min="2000" step="500">
+            </div>
           </div>
 
-          <div class="form-group form-full">
-            <label class="form-label">Hero Headline</label>
-            <input type="text" id="setting-hero-headline" class="form-control">
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Hero Subheadline</label>
-            <textarea id="setting-hero-subheadline" class="form-control" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Engineering Directive Tag</label>
-            <input type="text" id="setting-hero-directive" class="form-control">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Model Callout Badge</label>
-            <input type="text" id="setting-hero-modelBadge" class="form-control">
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Hero Background Image URL</label>
-            <input type="text" id="setting-hero-imageUrl" class="form-control">
-          </div>
-          <div class="form-group form-full">
-            <label class="form-label">Engineering Metrics Pill Text</label>
-            <input type="text" id="setting-hero-metricsPill" class="form-control">
+          <div class="form-full" id="admin-hero-banners-editor" style="display:flex; flex-direction:column; gap:12px;">
+            <!-- Populated dynamically with the 3 banners -->
           </div>
 
           <!-- Section Visibility Toggles -->
-          <div class="form-full" style="border-bottom: 1px solid var(--color-surface-container); padding-bottom: 12px; margin-top: 20px;">
+          <div class="form-full" style="border-bottom: 1px solid var(--color-outline-variant); padding-bottom: 10px; margin-top: 16px;">
             <h3 class="section-title" style="font-size: 15px;">3. Homepage Section Visibility & Titles</h3>
           </div>
 
           <div class="form-group">
-            <label class="form-label">New Arrivals Section Title</label>
+            <label class="form-label">Product Categories Section Title</label>
+            <input type="text" id="setting-sec-categories-title" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Product Categories Visibility</label>
+            <select id="setting-sec-categories-enabled" class="form-control">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Models Carousel Title</label>
             <input type="text" id="setting-sec-arrivals-title" class="form-control">
           </div>
           <div class="form-group">
-            <label class="form-label">New Arrivals Visibility</label>
+            <label class="form-label">New Models Visibility</label>
             <select id="setting-sec-arrivals-enabled" class="form-control">
               <option value="true">Visible</option>
               <option value="false">Hidden</option>
@@ -497,11 +509,11 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Architectural Favorites (Best Sellers) Title</label>
+            <label class="form-label">Category Best Sellers Title</label>
             <input type="text" id="setting-sec-bestsellers-title" class="form-control">
           </div>
           <div class="form-group">
-            <label class="form-label">Best Sellers Visibility</label>
+            <label class="form-label">Category Best Sellers Visibility</label>
             <select id="setting-sec-bestsellers-enabled" class="form-control">
               <option value="true">Visible</option>
               <option value="false">Hidden</option>
@@ -509,11 +521,11 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Door Systems Directory Title</label>
+            <label class="form-label">8 Door Systems Directory Title</label>
             <input type="text" id="setting-sec-systems-title" class="form-control">
           </div>
           <div class="form-group">
-            <label class="form-label">Door Systems Visibility</label>
+            <label class="form-label">8 Door Systems Visibility</label>
             <select id="setting-sec-systems-enabled" class="form-control">
               <option value="true">Visible</option>
               <option value="false">Hidden</option>
@@ -521,11 +533,11 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Completed Projects Case Studies Title</label>
+            <label class="form-label">Completed Projects Title</label>
             <input type="text" id="setting-sec-projects-title" class="form-control">
           </div>
           <div class="form-group">
-            <label class="form-label">Case Studies Visibility</label>
+            <label class="form-label">Completed Projects Visibility</label>
             <select id="setting-sec-projects-enabled" class="form-control">
               <option value="true">Visible</option>
               <option value="false">Hidden</option>

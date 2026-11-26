@@ -68,6 +68,7 @@ window.switchTab = function(tabName) {
     settings: 'Showroom Settings & Security'
   };
   if (titleEl) titleEl.textContent = titles[tabName] || 'Overview';
+  if (typeof window.toggleAdminSidebar === 'function') window.toggleAdminSidebar(false);
 };
 
 function initTabNavigation() {
@@ -222,7 +223,7 @@ function renderDoorsTable() {
         <td style="font-family:var(--font-mono);">${Utils.formatCurrency(door.basePrice)}</td>
         <td style="font-family:var(--font-mono);">
           ${priceInfo.hasDiscount ? `
-            <span style="color:#ba1a1a; font-weight:600;">${Utils.formatCurrency(priceInfo.effectivePrice)}</span>
+            <span style="color:var(--color-gold-dark); font-weight:600;">${Utils.formatCurrency(priceInfo.effectivePrice)}</span>
             <div style="font-size:10px; color:var(--color-secondary); text-decoration:line-through;">${Utils.formatCurrency(door.basePrice)} (-${priceInfo.discountPercent}%)</div>
           ` : `<span>${Utils.formatCurrency(door.basePrice)}</span>`}
         </td>
@@ -1004,7 +1005,7 @@ function renderPromosTable() {
     return `
       <tr>
         <td><strong>${Utils.escapeHtml(promo.name)}</strong></td>
-        <td><span class="status-pill status-tag" style="background:#ba1a1a;">${discountText}</span></td>
+        <td><span class="status-pill status-tag">${discountText}</span></td>
         <td style="text-transform:uppercase; font-size:11px;">${promo.targetType}</td>
         <td style="font-size:12px;">${targetNames.join(', ') || 'None selected'}</td>
         <td style="font-family:var(--font-mono); font-size:11px;">${validity}</td>
@@ -1365,30 +1366,96 @@ window.deleteInquiry = function(id) {
   }
 };
 
-/* ================= 11. SETTINGS & ACCOUNT ================= */
+/* ================= 11. SETTINGS, 3 HERO BANNERS & ACCOUNT ================= */
+window.toggleAdminSidebar = function(forceState) {
+  const sidebar = document.getElementById('admin-sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (!sidebar) return;
+  const shouldOpen = forceState !== undefined ? forceState : !sidebar.classList.contains('open');
+  sidebar.classList.toggle('open', shouldOpen);
+  if (overlay) overlay.classList.toggle('open', shouldOpen);
+};
+
+window.handleLogoFileUpload = function(input) {
+  if (input.files && input.files[0]) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const logoField = document.getElementById('setting-logoUrl');
+      if (logoField) logoField.value = e.target.result;
+      showToast('Logo image loaded — click Save All Settings to apply.');
+    };
+    reader.readAsDataURL(input.files[0]);
+  }
+};
+
 function loadSettingsForm() {
   const settings = store.getSettings();
 
   const setVal = (id, val) => {
     const el = document.getElementById(id);
-    if (el) el.value = val || '';
+    if (el) el.value = val ?? '';
   };
 
   setVal('setting-companyName', settings.companyName);
   setVal('setting-tagline', settings.tagline);
   setVal('setting-phone', settings.phone);
   setVal('setting-email', settings.email);
+  setVal('setting-logoUrl', settings.logoUrl || '../shared/assets/logo-mark.png');
   setVal('setting-certifications', settings.certifications);
+  setVal('setting-heroAutoplayMs', settings.heroAutoplayMs || 5000);
 
-  // Hero
-  setVal('setting-hero-headline', settings.hero?.headline);
-  setVal('setting-hero-subheadline', settings.hero?.subheadline);
-  setVal('setting-hero-directive', settings.hero?.directive);
-  setVal('setting-hero-modelBadge', settings.hero?.modelBadge);
-  setVal('setting-hero-imageUrl', settings.hero?.imageUrl);
-  setVal('setting-hero-metricsPill', settings.hero?.metricsPill);
+  const sidebarLogo = document.getElementById('admin-sidebar-logo');
+  if (sidebarLogo && settings.logoUrl) sidebarLogo.src = settings.logoUrl;
+
+  // Render 3 Rotating Hero Banners Editor
+  const bannersEditor = document.getElementById('admin-hero-banners-editor');
+  const banners = Array.isArray(settings.heroBanners) && settings.heroBanners.length === 3
+    ? settings.heroBanners
+    : [
+        settings.heroBanners?.[0] || { id: 'banner-1', badge: 'SERIES 01', headline: settings.hero?.headline || 'Frameless & Flush Doors', subheadline: settings.hero?.subheadline || '', imageUrl: settings.hero?.imageUrl || '', ctaText: 'Explore Doors', ctaLink: 'catalog.html' },
+        settings.heroBanners?.[1] || { id: 'banner-2', badge: 'SERIES 02', headline: 'Precision Sliding & Pocket Systems', subheadline: 'Acoustic wood and fluted glass doors.', imageUrl: '', ctaText: 'Best Sellers', ctaLink: '#bestsellers' },
+        settings.heroBanners?.[2] || { id: 'banner-3', badge: 'SERIES 03', headline: 'Custom Millwork & Trade Pricing', subheadline: 'Direct specification schedules.', imageUrl: '', ctaText: 'Request Quote', ctaLink: '#inquiry' }
+      ];
+
+  if (bannersEditor) {
+    bannersEditor.innerHTML = banners.map((b, idx) => `
+      <div class="banner-editor-card">
+        <div style="font-family:var(--font-headline); font-size:12px; font-weight:600; text-transform:uppercase; color:var(--color-gold-dark); margin-bottom:10px;">
+          Banner Slide ${idx + 1} of 3
+        </div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Top Badge Text</label>
+            <input type="text" id="banner-${idx}-badge" class="form-control" value="${Utils.escapeHtml(b.badge || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Banner Image URL</label>
+            <input type="text" id="banner-${idx}-imageUrl" class="form-control" value="${Utils.escapeHtml(b.imageUrl || '')}">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Headline</label>
+            <input type="text" id="banner-${idx}-headline" class="form-control" value="${Utils.escapeHtml(b.headline || '')}">
+          </div>
+          <div class="form-group form-full">
+            <label class="form-label">Subheadline</label>
+            <input type="text" id="banner-${idx}-subheadline" class="form-control" value="${Utils.escapeHtml(b.subheadline || '')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary CTA Button Text</label>
+            <input type="text" id="banner-${idx}-ctaText" class="form-control" value="${Utils.escapeHtml(b.ctaText || 'Explore Catalog')}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Primary CTA Link</label>
+            <input type="text" id="banner-${idx}-ctaLink" class="form-control" value="${Utils.escapeHtml(b.ctaLink || 'catalog.html')}">
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
 
   // Section configs
+  setVal('setting-sec-categories-title', settings.sectionConfigs?.categories?.title || 'Product Categories');
+  setVal('setting-sec-categories-enabled', settings.sectionConfigs?.categories?.enabled !== false ? 'true' : 'false');
   setVal('setting-sec-arrivals-title', settings.sectionConfigs?.newArrivals?.title);
   setVal('setting-sec-arrivals-enabled', settings.sectionConfigs?.newArrivals?.enabled !== false ? 'true' : 'false');
   setVal('setting-sec-bestsellers-title', settings.sectionConfigs?.bestSellers?.title);
@@ -1402,24 +1469,43 @@ function loadSettingsForm() {
 window.saveGlobalSettings = function() {
   const current = store.getSettings();
 
+  const heroBanners = [0, 1, 2].map(idx => {
+    const existing = current.heroBanners?.[idx] || {};
+    return {
+      ...existing,
+      id: existing.id || `banner-${idx + 1}`,
+      badge: document.getElementById(`banner-${idx}-badge`)?.value.trim() || '',
+      imageUrl: document.getElementById(`banner-${idx}-imageUrl`)?.value.trim() || '',
+      headline: document.getElementById(`banner-${idx}-headline`)?.value.trim() || '',
+      subheadline: document.getElementById(`banner-${idx}-subheadline`)?.value.trim() || '',
+      ctaText: document.getElementById(`banner-${idx}-ctaText`)?.value.trim() || 'Explore Catalog',
+      ctaLink: document.getElementById(`banner-${idx}-ctaLink`)?.value.trim() || 'catalog.html'
+    };
+  });
+
   const updated = {
     ...current,
     companyName: document.getElementById('setting-companyName').value.trim(),
     tagline: document.getElementById('setting-tagline').value.trim(),
     phone: document.getElementById('setting-phone').value.trim(),
     email: document.getElementById('setting-email').value.trim(),
+    logoUrl: document.getElementById('setting-logoUrl').value.trim() || '../shared/assets/logo-mark.png',
     certifications: document.getElementById('setting-certifications').value.trim(),
+    heroAutoplayMs: Number(document.getElementById('setting-heroAutoplayMs').value) || 5000,
+    heroBanners,
     hero: {
       ...current.hero,
-      headline: document.getElementById('setting-hero-headline').value.trim(),
-      subheadline: document.getElementById('setting-hero-subheadline').value.trim(),
-      directive: document.getElementById('setting-hero-directive').value.trim(),
-      modelBadge: document.getElementById('setting-hero-modelBadge').value.trim(),
-      imageUrl: document.getElementById('setting-hero-imageUrl').value.trim(),
-      metricsPill: document.getElementById('setting-hero-metricsPill').value.trim()
+      headline: heroBanners[0].headline,
+      subheadline: heroBanners[0].subheadline,
+      imageUrl: heroBanners[0].imageUrl
     },
     sectionConfigs: {
       ...current.sectionConfigs,
+      categories: {
+        ...current.sectionConfigs?.categories,
+        title: document.getElementById('setting-sec-categories-title').value.trim(),
+        enabled: document.getElementById('setting-sec-categories-enabled').value === 'true'
+      },
       newArrivals: {
         ...current.sectionConfigs?.newArrivals,
         title: document.getElementById('setting-sec-arrivals-title').value.trim(),
@@ -1444,7 +1530,8 @@ window.saveGlobalSettings = function() {
   };
 
   store.saveSettings(updated);
-  showToast('Global showroom settings updated.');
+  loadSettingsForm();
+  showToast('Showroom settings & 3 rotating banners saved.');
 };
 
 window.updateAdminPassword = function() {
@@ -1475,16 +1562,16 @@ window.exportDataJson = function() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `porta_architectural_database_${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `doors_gallery_database_${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 };
 
 window.resetToInitialSeed = function() {
-  if (confirm('CAUTION: This will reset all doors, brands, promotions, and settings to the initial PORTA seed data. Continue?')) {
+  if (confirm('CAUTION: This will reset all doors, brands, promotions, and settings to the initial Doors Gallery seed data. Continue?')) {
     store.resetToDefaults();
     loadAllViews();
-    showToast('Database reset to factory architectural seed.');
+    showToast('Database reset to factory seed.');
   }
 };
 

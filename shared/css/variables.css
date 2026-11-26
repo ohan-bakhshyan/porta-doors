@@ -1,63 +1,70 @@
 /**
- * PORTA Architectural Doors - Global Design Tokens
- * Aligned with Google Stitch pure monochrome architectural aesthetic.
+ * DOORS GALLERY — Global Design Tokens (Full HD Scale & <5% Black/Gold Budget)
+ * Base surfaces are >95% crisp white & warm alabaster; Black (#141414) and
+ * Metallic Gold (#B8922A / #C5A038) are strictly reserved for logo, CTAs,
+ * active menu accents, and price tags.
  */
 
 :root {
-  /* Architectural Monochrome Palette */
-  --color-primary: #000000;
-  --color-primary-container: #1c1b1b;
-  --color-on-primary: #ffffff;
-  
-  --color-secondary: #5e5e5e;
-  --color-secondary-container: #e4e2e2;
-  --color-on-secondary: #ffffff;
-
-  --color-surface: #f9f9f8;
-  --color-surface-bright: #f9f9f8;
-  --color-surface-low: #f3f4f3;
-  --color-surface-container: #eeeeed;
-  --color-surface-high: #e8e8e7;
+  /* Light Surfaces (>95% of viewport) */
+  --color-surface: #ffffff;
+  --color-surface-bright: #ffffff;
+  --color-surface-low: #f8f8f6;
+  --color-surface-container: #f1f0ec;
+  --color-surface-high: #e7e5df;
   --color-surface-lowest: #ffffff;
 
-  --color-on-surface: #1a1c1c;
-  --color-on-surface-variant: #444748;
-  --color-outline: #747878;
-  --color-outline-variant: #c4c7c7;
+  /* Typography & Neutral Borders */
+  --color-on-surface: #26282a;
+  --color-on-surface-variant: #5c6066;
+  --color-secondary: #6e7278;
+  --color-outline: #b8b6af;
+  --color-outline-variant: #e5e3dc;
 
-  /* Typography */
-  --font-display: 'Space Grotesk', -apple-system, sans-serif;
-  --font-headline: 'Space Grotesk', -apple-system, sans-serif;
-  --font-label: 'Space Grotesk', -apple-system, sans-serif;
-  --font-body: 'Inter', -apple-system, sans-serif;
+  /* Strict <5% Accent Budget: Logo Black & Metallic Gold */
+  --color-primary: #141414;
+  --color-primary-container: #1f1f1f;
+  --color-on-primary: #ffffff;
+
+  --color-gold: #b8922a;
+  --color-gold-bright: #c5a038;
+  --color-gold-dark: #96751d;
+  --color-gold-light: #e5c76b;
+  --color-gold-tint: #fbf8ef;
+
+  /* Typography Families */
+  --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-headline: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-label: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Spacing */
-  --space-xs: 0.25rem;  /* 4px */
-  --space-sm: 0.5rem;   /* 8px */
-  --space-md: 1rem;     /* 16px */
-  --space-lg: 2rem;     /* 32px */
-  --space-xl: 4rem;     /* 64px */
-  --gutter: 1.5rem;     /* 24px */
-  --margin: 2.5rem;     /* 40px */
+  /* Full HD Compact Scale Tokens */
+  --max-width-container: 1240px;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.875rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.75rem;
+  --gutter: 1rem;
+  --margin: 1.25rem;
 
-  /* Borders & Shadows */
-  --border-hairline: 1px solid var(--color-surface-container);
-  --border-subtle: 1px solid var(--color-outline-variant);
-  --border-contrast: 1px solid var(--color-primary);
+  /* Borders & Subtle Elevation */
+  --border-hairline: 1px solid var(--color-outline-variant);
+  --border-subtle: 1px solid var(--color-outline);
+  --border-gold: 1px solid var(--color-gold-bright);
 
-  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.09);
-  --shadow-drawer: -4px 0 32px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 3px rgba(20, 20, 20, 0.04);
+  --shadow-md: 0 4px 14px rgba(20, 20, 20, 0.06);
+  --shadow-lg: 0 10px 28px rgba(20, 20, 20, 0.09);
+  --shadow-drawer: -4px 0 28px rgba(20, 20, 20, 0.12);
 
   /* Transitions */
   --transition-fast: 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-normal: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  --transition-slow: 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Universal Reset */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -67,6 +74,7 @@
 html {
   scroll-behavior: smooth;
   font-family: var(--font-body);
+  font-size: 15px;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
   -webkit-font-smoothing: antialiased;
@@ -78,6 +86,7 @@ body {
   line-height: 1.5;
   background-color: var(--color-surface);
   color: var(--color-on-surface);
+  overflow-x: hidden;
 }
 
 img, svg {
@@ -95,4 +104,13 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+}
+
+/* Hide scrollbars for horizontal category pills on mobile */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

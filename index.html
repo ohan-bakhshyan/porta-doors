@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PORTA ARCHITECTURAL DOORS — Gateway Hub</title>
+  <title>DOORS GALLERY — Architectural Showroom & CMS</title>
   <link rel="stylesheet" href="shared/css/variables.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body {
-      background-color: var(--color-surface);
+      background-color: var(--color-surface-low);
       color: var(--color-on-surface);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 40px 24px;
+      padding: 28px 16px;
     }
     .hub-container {
-      max-width: 900px;
+      max-width: 880px;
       width: 100%;
       text-align: center;
     }
@@ -28,70 +28,58 @@
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 24px;
+      margin-bottom: 16px;
     }
-    .portal-icon {
-      width: 28px;
-      height: 38px;
-      border: 2px solid var(--color-primary);
-      position: relative;
-    }
-    .portal-icon::after {
-      content: '';
-      position: absolute;
-      right: 3px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 3px;
-      height: 3px;
-      background: var(--color-primary);
-      border-radius: 50%;
+    .brand-mark img {
+      height: 46px;
+      width: auto;
+      object-fit: contain;
     }
     .brand-name {
       font-family: var(--font-headline);
       font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
       color: var(--color-primary);
     }
     .hub-tag {
       font-family: var(--font-label);
-      font-size: 11px;
-      letter-spacing: 0.25em;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: var(--color-secondary);
-      margin-bottom: 12px;
+      color: var(--color-gold-dark);
+      margin-bottom: 8px;
       display: block;
     }
     .hub-title {
       font-family: var(--font-headline);
-      font-size: clamp(28px, 4.5vw, 44px);
-      font-weight: 300;
-      letter-spacing: -0.02em;
+      font-size: clamp(22px, 3vw, 32px);
+      font-weight: 500;
+      letter-spacing: -0.01em;
       text-transform: uppercase;
       color: var(--color-primary);
-      margin-bottom: 14px;
-      line-height: 1.2;
+      margin-bottom: 10px;
     }
     .hub-subtitle {
-      font-size: 15px;
-      color: var(--color-secondary);
-      max-width: 620px;
-      margin: 0 auto 48px;
+      font-size: 13px;
+      color: var(--color-on-surface-variant);
+      max-width: 540px;
+      margin: 0 auto 32px;
       line-height: 1.6;
     }
     .cards-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 16px;
       text-align: left;
-      margin-bottom: 48px;
+      margin-bottom: 32px;
     }
     .launch-card {
-      background: var(--color-surface-lowest);
-      border: 1px solid var(--color-surface-container);
-      padding: 36px 30px;
+      background: #ffffff;
+      border: 1px solid var(--color-outline-variant);
+      padding: 24px 22px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -99,107 +87,109 @@
       box-shadow: var(--shadow-sm);
     }
     .launch-card:hover {
-      border-color: var(--color-primary);
-      transform: translateY(-3px);
+      border-color: var(--color-gold);
+      transform: translateY(-2px);
       box-shadow: var(--shadow-md);
     }
     .card-tag {
       font-family: var(--font-label);
-      font-size: 10px;
+      font-size: 9px;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      color: var(--color-secondary);
-      margin-bottom: 12px;
+      color: var(--color-gold-dark);
+      margin-bottom: 8px;
     }
     .card-name {
       font-family: var(--font-headline);
-      font-size: 20px;
-      font-weight: 500;
+      font-size: 16px;
+      font-weight: 600;
       text-transform: uppercase;
       color: var(--color-primary);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .card-desc {
-      font-size: 13px;
-      color: var(--color-secondary);
-      line-height: 1.6;
-      margin-bottom: 24px;
+      font-size: 12px;
+      color: var(--color-on-surface-variant);
+      line-height: 1.55;
+      margin-bottom: 18px;
     }
     .btn-launch {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 12px 20px;
-      background: var(--color-primary);
-      color: var(--color-on-primary);
+      padding: 9px 14px;
+      background: #ffffff;
+      border: 1px solid var(--color-gold);
+      color: var(--color-primary);
       font-family: var(--font-label);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.16em;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       transition: all var(--transition-fast);
-      text-align: center;
+    }
+    .btn-launch.primary {
+      background: var(--color-primary);
+      color: var(--color-gold-light);
+      border-color: var(--color-primary);
     }
     .btn-launch:hover {
-      background: var(--color-surface-high);
-      color: var(--color-primary);
+      background: var(--color-gold);
+      border-color: var(--color-gold);
+      color: #ffffff;
     }
     .hub-footer {
       font-family: var(--font-label);
-      font-size: 11px;
-      letter-spacing: 0.15em;
+      font-size: 10px;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       color: var(--color-secondary);
     }
   </style>
 </head>
 <body>
-
   <div class="hub-container">
     <div class="brand-mark">
-      <div class="portal-icon"></div>
-      <div class="brand-name">PORTA ARCHITECTURAL DOORS</div>
+      <img src="shared/assets/logo-mark.png" alt="Doors Gallery Logo">
+      <div class="brand-name">DOORS GALLERY</div>
     </div>
 
-    <span class="hub-tag">Engineering Directive / Zurich • Milan • NYC</span>
-    <h1 class="hub-title">Architectural Showroom & Specification CMS</h1>
+    <span class="hub-tag">Architectural Door Showroom & Specification Platform</span>
+    <h1 class="hub-title">Showroom & Control Center</h1>
     <p class="hub-subtitle">
-      Monolithic frameless portals, concealed magnetic systems, and dynamic trade administration engineered to European acoustic standards.
+      Frameless concealed doors, rotating promotional banners, category showcases, 8 mechanical door systems, and dynamic catalog administration.
     </p>
 
     <div class="cards-grid">
-      <!-- Card 1: Front Showroom -->
       <div class="launch-card">
         <div>
-          <div class="card-tag">Public Surface</div>
-          <div class="card-name">Architectural Showroom</div>
+          <div class="card-tag">Public Website</div>
+          <div class="card-name">Doors Gallery Front</div>
           <div class="card-desc">
-            Explore New Arrivals, 8 strict mechanical opening typologies, completed case studies, and interactive specification list.
+            Header & category menu, 3 rotating banners, product categories, new models & category best sellers carousels.
           </div>
         </div>
-        <a href="front/index.html" class="btn-launch">Open Showroom →</a>
+        <a href="front/index.html" class="btn-launch primary">Open Showroom →</a>
       </div>
 
-      <!-- Card 2: Catalog -->
       <div class="launch-card">
         <div>
-          <div class="card-tag">Specifier Directory</div>
-          <div class="card-name">Catalog & Collections</div>
+          <div class="card-tag">Full Collection</div>
+          <div class="card-name">Door Catalog</div>
           <div class="card-desc">
-            Filter architectural doors by brand partner, category, mechanical system, and active promotional incentives.
+            Filter all doors by category, brand, mechanical system, or active promotional offers.
           </div>
         </div>
-        <a href="front/catalog.html" class="btn-launch">Explore Catalog →</a>
+        <a href="front/catalog.html" class="btn-launch">Browse Catalog →</a>
       </div>
 
-      <!-- Card 3: Admin CMS -->
       <div class="launch-card">
         <div>
-          <div class="card-tag">Protected Admin Gate</div>
-          <div class="card-name">Control Center</div>
+          <div class="card-tag">CMS Administration</div>
+          <div class="card-name">Admin Panel</div>
           <div class="card-desc">
-            Authenticate to manage models, multi-image primary covers, safe brand/category reassignments, promotions, and inquiries.
+            Manage the 3 rotating banners, brand logo, categories, doors, promotions, completed projects, and inquiries.
           </div>
         </div>
         <a href="admin/index.html" class="btn-launch">Sign In to CMS →</a>
@@ -207,9 +197,8 @@
     </div>
 
     <div class="hub-footer">
-      PORTA Architectural Doors GmbH • CE & UL Certified Flush Systems • Demo Seed: admin / admin
+      Doors Gallery • Full HD & Mobile Responsive • Admin Demo: admin / admin
     </div>
   </div>
-
 </body>
 </html>

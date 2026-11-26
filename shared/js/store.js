@@ -6,8 +6,8 @@
 import { INITIAL_SEED_DATA } from './seed-data.js';
 import { Utils } from './utils.js';
 
-const STORAGE_KEY = 'porta_store_v2';
-const SPEC_LIST_KEY = 'porta_spec_list_v2';
+const STORAGE_KEY = 'dg_store_v3';
+const SPEC_LIST_KEY = 'dg_spec_list_v3';
 const ADMIN_SESSION_KEY = 'porta_admin_session';
 
 class Store {

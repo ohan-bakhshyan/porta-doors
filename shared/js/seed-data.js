@@ -1,6 +1,7 @@
 /**
- * PORTA Architectural Doors - Minimalist Showroom Seed Data
- * Designed according to Google Stitch monochrome architectural specification.
+ * DOORS GALLERY — Showroom Seed Data (v3)
+ * Structured with 3 Rotating Hero Banners, Category Showcase, New Models,
+ * Category Best Sellers, 8 Mechanical Systems, Projects, and Brand Logo settings.
  */
 
 export const INITIAL_SEED_DATA = {
@@ -9,9 +10,9 @@ export const INITIAL_SEED_DATA = {
     {
       id: 'admin-001',
       username: 'admin',
-      passwordHash: 'admin', // Demo environment plaintext / hashed
-      name: 'Architectural Director',
-      email: 'admin@porta-doors.com',
+      passwordHash: 'admin',
+      name: 'Showroom Administrator',
+      email: 'admin@doorsgallery.com',
       role: 'superadmin',
       isActive: true,
       createdAt: '2025-01-01T00:00:00Z'
@@ -20,91 +21,127 @@ export const INITIAL_SEED_DATA = {
 
   // 2. Global Site Settings & Homepage Configurations
   settings: {
-    companyName: 'PORTA ARCHITECTURAL DOORS',
-    tagline: 'Engineered Frameless Portals & Flush Architectural Door Systems',
+    companyName: 'DOORS GALLERY',
+    tagline: 'Architectural Interior & Concealed Door Systems',
+    logoUrl: '../shared/assets/logo-mark.png',
+    logoBadgeUrl: '../shared/assets/logo.jpeg',
     phone: '+1 (800) 942-7678',
-    email: 'spec@porta-doors.com',
+    email: 'sales@doorsgallery.com',
     tradeLine: '+1 (800) 942-7678',
     catalogPdfUrl: '#',
     certifications: 'CE & UL Certified Flush Systems • ISO 9001 Certified',
-    copyright: '© 2025 PORTA ARCHITECTURAL DOORS GMBH. ALL RIGHTS RESERVED.',
-    
-    // Hero Section
-    hero: {
-      directive: 'Engineering Directive / Zurich • Milan • NYC',
-      headline: 'Invisible Boundaries. Flush Doors Engineered with European Precision.',
-      subheadline: 'Frameless acoustic door leaves, concealed magnetic latches, and sub-millimeter architectural shadow gaps for transcendent living spaces.',
-      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAo0SIg-akviU64YIyDKhR35TYcPhLzbsqrcevqKW-oQUPDFYtWMB1Mp1bcFcYT4cyLbjAgO_cvIDDpA1G8vuHU8exvI0fd8dFd5fq5h73yeKzWKaWgSeV_flrIAm4rrmf-dhctfybLRDGaVXtbKA4zA-I6kSiy8R_UbDRMOIo1BUPkUB0_gU1rxEXFwTiqe8RpYR2-0D0fIKrAS9YyxEaedon-jiO5psD8aAOmD2ZH6PZme7WzVRxBKw3puovKTdk3tGbWgAwyNU',
-      modelBadge: 'Model: Monolith Flush Pivot 00 — Board-Formed Concrete',
-      metricsPill: 'ISO 9001 Certified • Concealed German Hardware • Up to 12ft Floor-to-Ceiling Single Leaves',
-      specs: {
-        acoustic: 'Up to 46dB',
-        jamb: '0mm Flush Profile',
-        lead: '6-8 Weeks'
+    copyright: '© 2026 DOORS GALLERY. ALL RIGHTS RESERVED.',
+
+    // 3 Rotating Hero Banners (Editable in Admin Settings)
+    heroAutoplayMs: 5000,
+    heroBanners: [
+      {
+        id: 'banner-1',
+        badge: 'EUROPEAN ARCHITECTURAL SERIES',
+        headline: 'Frameless & Flush Concealed Doors',
+        subheadline: 'Zero-jamb doors engineered to sit 100% flush with drywall and plaster with silent magnetic latches.',
+        imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAo0SIg-akviU64YIyDKhR35TYcPhLzbsqrcevqKW-oQUPDFYtWMB1Mp1bcFcYT4cyLbjAgO_cvIDDpA1G8vuHU8exvI0fd8dFd5fq5h73yeKzWKaWgSeV_flrIAm4rrmf-dhctfybLRDGaVXtbKA4zA-I6kSiy8R_UbDRMOIo1BUPkUB0_gU1rxEXFwTiqe8RpYR2-0D0fIKrAS9YyxEaedon-jiO5psD8aAOmD2ZH6PZme7WzVRxBKw3puovKTdk3tGbWgAwyNU',
+        ctaText: 'Explore Flush Doors',
+        ctaLink: 'catalog.html?category=flush-concealed',
+        secondaryCtaText: 'Request Quote',
+        secondaryCtaLink: '#inquiry'
       },
-      primaryCtaText: 'View Collections',
-      primaryCtaLink: '#collections',
-      secondaryCtaText: 'Request Specification',
-      secondaryCtaLink: '#inquiry'
+      {
+        id: 'banner-2',
+        badge: 'ACOUSTIC WOOD & FLUTED GLASS',
+        headline: 'Precision Sliding, Pocket & Pivot Systems',
+        subheadline: '42dB solid-core European walnut, smoked oak, and reeded acoustic glass crafted for modern residences.',
+        imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=80',
+        ctaText: 'View Best Sellers',
+        ctaLink: '#bestsellers',
+        secondaryCtaText: 'Browse All Systems',
+        secondaryCtaLink: '#systems'
+      },
+      {
+        id: 'banner-3',
+        badge: 'TRADE & ARCHITECTURAL SPECIFIERS',
+        headline: 'Custom Millwork & Direct Project Pricing',
+        subheadline: 'Tailored dimensions up to 12ft ceiling height, pre-assembled subframes, and active package incentives.',
+        imageUrl: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80',
+        ctaText: 'Explore New Models',
+        ctaLink: '#new-arrivals',
+        secondaryCtaText: 'Submit Door Schedule',
+        secondaryCtaLink: '#inquiry'
+      }
+    ],
+
+    // Legacy single-hero fallback object kept synced with Banner 1 for compatibility
+    hero: {
+      directive: 'Architectural Showroom • Los Angeles • Milan • Zurich',
+      headline: 'Frameless & Flush Concealed Doors',
+      subheadline: 'Zero-jamb doors engineered to sit 100% flush with drywall and plaster with silent magnetic latches.',
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAAo0SIg-akviU64YIyDKhR35TYcPhLzbsqrcevqKW-oQUPDFYtWMB1Mp1bcFcYT4cyLbjAgO_cvIDDpA1G8vuHU8exvI0fd8dFd5fq5h73yeKzWKaWgSeV_flrIAm4rrmf-dhctfybLRDGaVXtbKA4zA-I6kSiy8R_UbDRMOIo1BUPkUB0_gU1rxEXFwTiqe8RpYR2-0D0fIKrAS9YyxEaedon-jiO5psD8aAOmD2ZH6PZme7WzVRxBKw3puovKTdk3tGbWgAwyNU',
+      modelBadge: 'Flush Concealed Series',
+      metricsPill: 'ISO 9001 Certified • Concealed Hardware • Up to 12ft Height'
     },
 
-    // Architectural Philosophy Statement
     philosophy: {
-      tag: 'Tectonic Discipline & Truth to Material',
-      quote: '“A door should not interrupt an architectural plane. It should either dissolve completely into the monolith or celebrate pure material truth.”',
-      attribution: 'Dieter Rams & John Pawson Axiom • Aesthetic Baseline 2025'
+      tag: 'Architectural Craftsmanship',
+      quote: '“A door should either dissolve effortlessly into the architectural plane or celebrate pure material craft.”',
+      attribution: 'Doors Gallery Design Standard • Bespoke Interior Systems'
     },
 
-    // Homepage Section Configs
+    // Homepage Section Configs (Matches Client Sequence)
     sectionConfigs: {
+      categories: {
+        enabled: true,
+        tag: '01 / Collections',
+        title: 'Product Categories',
+        subtitle: 'Browse engineered interior door families by architectural material and wall integration.'
+      },
       newArrivals: {
         enabled: true,
-        tag: '01 / Mechanical Advancements',
-        title: 'New Arrivals',
-        subtitle: 'Recent mechanical patents, motorized flush pocket assemblies, and monolithic concrete-faced door sets.',
-        maxItems: 6
+        tag: '02 / Latest Releases',
+        title: 'New Models',
+        subtitle: 'Newly released flush pivot leaves, motorized cavity sliders, and monolithic stone-veneered doors.',
+        maxItems: 5
       },
       bestSellers: {
         enabled: true,
-        tag: '02 / Field-Tested Specifications',
-        title: 'Architectural Favorites',
-        subtitle: 'Field-tested specifications selected by premier architectural studios for uncompromising minimalist projects.',
-        maxItems: 6
+        tag: '03 / Most Specified',
+        title: 'Category Best Sellers',
+        subtitle: 'Top-performing models across our core door categories, ready for residential and commercial schedules.',
+        maxItems: 5
       },
       mechanicalSystems: {
         enabled: true,
-        tag: '03 / Mechanical Typologies',
-        title: 'Door Systems Directory',
-        subtitle: 'Precision engineered opening typologies for seamless spatial choreography and perimeter zero-tolerance jambs.',
+        tag: '04 / Hardware & Motion',
+        title: '8 Mechanical Door Systems',
+        subtitle: 'Precision opening typologies engineered for zero-tolerance jambs and smooth spatial transitions.',
         maxItems: 8
       },
       projects: {
         enabled: true,
-        tag: '04 / Built Architecture',
-        title: 'Global Case Studies',
-        subtitle: 'Uncompromised architectural visions realised alongside international practices and Master Builders.',
+        tag: '05 / Portfolio & Feedback',
+        title: 'Completed Projects',
+        subtitle: 'Installed residential and commercial projects with verified architect and client feedback.',
         maxItems: 6
       },
       inquiry: {
         enabled: true,
-        tag: '05 / Direct Trade Engagement',
-        title: 'Trade Specification & Inquiry',
-        subtitle: 'Dedicated technical support for Architects, Interior Designers, General Contractors, and Millwork Developers.'
+        tag: '06 / Project Estimation',
+        title: 'Request a Quote & Specification',
+        subtitle: 'Send your opening counts or door schedule for tailored trade pricing within 24 business hours.'
       },
       testimonials: {
         enabled: true,
-        tag: '06 / Peer Recognition',
-        title: 'Trade & Architect Endorsements',
-        subtitle: 'Unvarnished feedback from architectural studios specifying PORTA.'
+        tag: '07 / Client Reviews',
+        title: 'Architect & Builder Endorsements',
+        subtitle: 'Feedback from design studios and contractors specifying Doors Gallery.'
       }
     },
 
-    // Global Showroom Locations
+    // Showroom Locations
     showrooms: [
-      { city: 'Milan', address: 'Via Manzoni 14' },
-      { city: 'Zurich', address: 'Gotthardstrasse 26' },
-      { city: 'New York', address: '520 West 28th St' },
-      { city: 'Los Angeles', address: '8687 Melrose Ave' }
+      { city: 'Los Angeles', address: '8687 Melrose Ave, West Hollywood, CA' },
+      { city: 'New York', address: '520 West 28th St, Chelsea, NY' },
+      { city: 'Milan', address: 'Via Manzoni 14, Milano' },
+      { city: 'Zurich', address: 'Gotthardstrasse 26, Zürich' }
     ]
   },
 
@@ -112,8 +149,8 @@ export const INITIAL_SEED_DATA = {
   brands: [
     {
       id: 'brand-porta-de',
-      name: 'PORTA Precision Germany',
-      slug: 'porta-germany',
+      name: 'Doors Gallery Signature',
+      slug: 'doors-gallery-signature',
       originCountry: 'Germany',
       bio: 'High-precision sub-millimeter concealed aluminum jambs and heavy-duty 3D adjustable pivot systems engineered in Stuttgart.',
       logo: '',
@@ -125,7 +162,7 @@ export const INITIAL_SEED_DATA = {
       name: 'Rimadesio Milan',
       slug: 'rimadesio-milan',
       originCountry: 'Italy',
-      bio: 'Pioneers of architectural sliding systems, fluted acoustic glass partitions, and extruded obsidian aluminum frames.',
+      bio: 'Pioneers of architectural sliding systems, fluted acoustic glass partitions, and extruded anodized aluminum frames.',
       logo: '',
       heroBanner: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1600&q=80',
       isActive: true
@@ -135,7 +172,7 @@ export const INITIAL_SEED_DATA = {
       name: 'Linvisibile Portali',
       slug: 'linvisibile-portali',
       originCountry: 'Italy',
-      bio: 'The pure Italian philosophy of absolute planar continuity: doors that dissolve completely into Venetian plaster and stone.',
+      bio: 'Italian planar continuity: concealed doors engineered to sit seamlessly flush with plaster, wood, and stone walls.',
       logo: '',
       heroBanner: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80',
       isActive: true
@@ -145,7 +182,7 @@ export const INITIAL_SEED_DATA = {
       name: 'Schüco Systems',
       slug: 'schuco-systems',
       originCountry: 'Germany',
-      bio: 'World benchmark in monumental pivot entrance portals, thermal break engineering, and certified acoustic attenuation.',
+      bio: 'Benchmark in monumental pivot portals, slim-profile glass dividers, and certified acoustic attenuation.',
       logo: '',
       heroBanner: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80',
       isActive: true
@@ -156,46 +193,46 @@ export const INITIAL_SEED_DATA = {
   categories: [
     {
       id: 'cat-flush-concealed',
-      name: 'Flush Concealed Portals',
+      name: 'Flush Concealed',
       slug: 'flush-concealed',
-      description: 'Zero-jamb doors flush with drywall, plaster, or stone paneling with invisible 3-axis hinges.',
-      coverImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+      description: 'Zero-jamb doors flush with drywall or plaster using hidden 3D hinges.',
+      coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkRn-7elj6NOepzHtzLZukL4dvCKZMgsnIpfztYT15ONO-hyZL1xYrHS6ixDSJ1Hy4Jlk2Qn3nwfdkzgQ5Fc4XpKEZMjBntcUGFI8fGaUQLt3iPLDc2xkDdLbgSxCOcmKfZf7naSB68Y2GCQsbwOFONYJ_mkTWc-dS8x8H7eeu1-log2tS3ITLBGrTKVOR-mYcl6xWDbB7GU3pL0xZAwDhKI95_bxz1Zy4r0hWIB3kFsQIFl-1P0-nJUdCvc6JR8f_PRVo_qGNmkU',
       sortOrder: 1,
       isActive: true
     },
     {
       id: 'cat-monolithic-wood',
-      name: 'Acoustic Wood Portals',
+      name: 'Acoustic Wood',
       slug: 'acoustic-wood',
-      description: 'Full-height smoked fumed oak, American black walnut, and architectural timber with 42dB+ solid core.',
-      coverImage: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80',
+      description: 'Full-height smoked oak, walnut, and natural veneers with 42dB+ solid cores.',
+      coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQlCc-a_yLLj9dlqmzYSkyHDKXvqn3Ew1dc7w4PohjVtuXmV1gcXNnY7AcXgRvqTVihXtD3qlSdxPoM1YNj8TauMFNm1UC19mXnYDEKfR7LEYapjaN15sI11aZhX66a5UiH4RWBUvZp3bDDqHGroASF46kv7Lj1kjlYKSLRS5jGbShTxxtBK8fHRqI3HWv7LA1W8Yx5S-Gw2nAa0itWdl6s5QX5Sl5uVpyAt_sXfwvvRQXmWkE0iDtMHJ5rvBfkuRaeaadQPCH1-Q',
       sortOrder: 2,
       isActive: true
     },
     {
       id: 'cat-fluted-glass',
-      name: 'Minimal Fluted Glass',
+      name: 'Minimal Glass',
       slug: 'minimal-glass',
-      description: 'Precision reeded acoustic laminated glass enclosed in razor-thin matte black anodized aluminum.',
-      coverImage: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
+      description: 'Fluted and clear acoustic safety glass framed in ultra-slim aluminum.',
+      coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4rJGkT1rGqel4S09j30CdO59YfSsOSV2zpEumfc9CIuLs7gCBlo_Z6HJa5tjZpX9yMMeBU1TMb42YlttMpwypsHlt1KOI2Ux4wnas2k8icA_kZ_fcDe1Csi5OeB5MLIhVndsGo18APxND1eOVuc6gOO3XdveH-76NSZHd3OmCtH-XU02t7Kc2tY4XlVV1j0ILnGndqRwNnvN0-J7Z3TrP8y9XqAKtHqyP8r8V8e1SFuQBHSczT-T-tQUH7jQJZvf9f5Mescmz85c',
       sortOrder: 3,
       isActive: true
     },
     {
       id: 'cat-concrete-stone',
-      name: 'Architectural Stone & Concrete',
+      name: 'Stone & Concrete',
       slug: 'stone-concrete',
-      description: 'Real micro-cement and board-formed stone veneers bonded to lightweight aerospace honeycomb aluminum cores.',
-      coverImage: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80',
+      description: 'Micro-cement and stone veneers over lightweight honeycomb aluminum cores.',
+      coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDty1mjJUsiJh0_mCtoMTSg5Jt5UkqymGORx-7iAuJc-nq4wKDh1iE76YXLik9XHAkt2OI0kmxrzC0_341TnPVQw24gD1Th4aWe2YBntWGnO_Btim6F8snILnCgtVxGfZA6_ZwsqwNddEAz9EUb_cy2D4PZU3CD2D1ioYlGOrmpVTiO2LEyc1bSZZ2xrqbb2pt_qpPiEKoq8Dgm0Yka2Dfi2FM1uD7PB5wpyK40F8NUMlDAhfkSjmoV9kjkY1UA0bWkP0HuI1LwEkk',
       sortOrder: 4,
       isActive: true
     },
     {
       id: 'cat-pocket-cavity',
-      name: 'Concealed Pocket Cavity Systems',
+      name: 'Pocket & Sliding',
       slug: 'pocket-cavity',
-      description: 'Trackless motorized and soft-closing flush cavity sliders that disappear completely inside dryline walls.',
-      coverImage: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80',
+      description: 'Trackless flush cavity sliders and soft-close architectural bypass doors.',
+      coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9lJr5OlnqZrAFVGqZsajKQhAZAMFwv2QEcJ8NJWMLNB17DpGY4AXi747poiwn8xwYPgVQRgHKue1rVDqptSC_sToljCD1c-SZW3w51lyCfWVRgoQiUnzv1-1Nt_lJxZrA0F98nMLqwOYWZUmv0Zcvw2cnC1CPk7EO6Zaz2cLbLEYaGbQ74e3euExhfLgGn9nLzUnFM0ZUco-nNDJcZq8Sh3S4MU9Am_vB5XKcBQMENFOStE-B5xcWWJdtWRPDFbNzbiXK5TTKoyY',
       sortOrder: 5,
       isActive: true
     }
@@ -207,11 +244,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-single-swing',
       code: 'SW-101',
       name: 'Single Swing',
-      description: 'Flush concealed jamb with 3D adjustable hidden hinges and acoustic drop-down perimeter seal.',
+      description: 'Flush concealed jamb with 3D adjustable hidden hinges and acoustic drop-down seal.',
       capacity: '160 kg / 352 lbs',
       maxHeight: '3600 mm',
-      frameType: 'Zero-Jamb Flush Inset Subframe',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Zero-Jamb Flush Inset',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <line opacity="0.4" stroke="currentColor" stroke-dasharray="2 2" x1="8" x2="8" y1="40" y2="8"></line>
         <line x1="8" x2="48" y1="40" y2="40"></line>
         <path d="M8,40 A32,32 0 0,1 40,8" opacity="0.5" stroke-dasharray="3 3"></path>
@@ -223,11 +260,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-single-pocket',
       code: 'PK-202',
       name: 'Single Pocket',
-      description: 'Trackless flush threshold sliding completely inside cavity walls with soft dampen stop.',
+      description: 'Trackless flush threshold sliding cleanly inside wall cavities with soft-close.',
       capacity: '140 kg / 308 lbs',
       maxHeight: '3200 mm',
-      frameType: 'Structural Cassette Pocket Frame',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Cavity Cassette Frame',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <rect fill="currentColor" fill-opacity="0.1" height="8" width="24" x="4" y="20"></rect>
         <line stroke-width="1.5" x1="4" x2="28" y1="20" y2="20"></line>
         <line stroke-width="1.5" x1="4" x2="28" y1="28" y2="28"></line>
@@ -240,11 +277,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-double-swing',
       code: 'DS-303',
       name: 'Double Swing',
-      description: 'Paired monolithic leaves with magnetic center rebate and sub-millimeter meeting margins.',
+      description: 'Paired monolithic leaves with magnetic center rebate and tight reveal margins.',
       capacity: '200 kg / leaf',
       maxHeight: '2800 mm',
-      frameType: 'Dual Perimeter Shadow Reveal',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Dual Shadow Reveal',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <line opacity="0.4" stroke-dasharray="2 2" x1="8" x2="56" y1="40" y2="40"></line>
         <path d="M8,40 A24,24 0 0,1 32,16" opacity="0.5" stroke-dasharray="2 2"></path>
         <path d="M56,40 A24,24 0 0,0 32,16" opacity="0.5" stroke-dasharray="2 2"></path>
@@ -256,11 +293,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-double-pocket',
       code: 'DP-404',
       name: 'Double Pocket',
-      description: 'Synchronized bi-parting pocket system disappearing entirely into dual dryline wall cavities.',
+      description: 'Synchronized bi-parting pocket leaves disappearing into dual wall cavities.',
       capacity: '150 kg / leaf',
       maxHeight: '4000 mm span',
-      frameType: 'Bi-Parting Telescopic Cassette',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Bi-Parting Cassette',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <rect fill="currentColor" fill-opacity="0.1" height="8" width="16" x="2" y="20"></rect>
         <rect fill="currentColor" fill-opacity="0.1" height="8" width="16" x="46" y="20"></rect>
         <rect fill="currentColor" height="4" width="18" x="14" y="22"></rect>
@@ -271,11 +308,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-barn',
       code: 'BN-505',
       name: 'Barn System',
-      description: 'Exposed architectural top track in hand-brushed gunmetal, raw stainless, or blackened bronze.',
+      description: 'Minimalist architectural top-suspension rail in brushed bronze or satin steel.',
       capacity: '220 kg / 485 lbs',
-      maxHeight: 'Solid Billet Milled Track',
-      frameType: 'Top Suspension Surface Rail',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      maxHeight: 'Solid Billet Rail',
+      frameType: 'Top Surface Track',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <line stroke-width="2.5" x1="6" x2="58" y1="12" y2="12"></line>
         <circle cx="20" cy="12" fill="currentColor" r="3"></circle>
         <line stroke-width="1.5" x1="20" x2="20" y1="15" y2="22"></line>
@@ -286,11 +323,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-bypass',
       code: 'BP-606',
       name: 'Bypass System',
-      description: 'Parallel sliding panels for expansive multi-room spatial transitions and modular zoning.',
+      description: 'Parallel sliding panels for wide multi-room transitions and closet zoning.',
       capacity: '180 kg / panel',
       maxHeight: 'Up to 6 leaves',
-      frameType: 'Recessed Ceiling Multi-Channel',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Recessed Ceiling Track',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <line stroke-dasharray="2 2" x1="6" x2="58" y1="16" y2="16"></line>
         <line stroke-dasharray="2 2" x1="6" x2="58" y1="24" y2="24"></line>
         <rect fill="currentColor" height="4" width="28" x="10" y="14"></rect>
@@ -301,11 +338,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-bifold',
       code: 'BF-707',
       name: 'Bifold System',
-      description: 'Flush folding partitions with zero floor track intrusion and continuous architectural reveals.',
+      description: 'Flush folding partitions with zero floor track intrusion and slim reveals.',
       capacity: '100 kg / leaf',
-      maxHeight: 'Recessed 0mm Flush',
-      frameType: 'Ceiling Concealed Pivot Carrier',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      maxHeight: 'Recessed 0mm',
+      frameType: 'Overhead Pivot Carrier',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <line stroke-width="1.5" x1="6" x2="58" y1="12" y2="12"></line>
         <line stroke-width="2" x1="10" x2="26" y1="12" y2="34"></line>
         <line stroke-width="2" x1="26" x2="38" y1="34" y2="12"></line>
@@ -316,11 +353,11 @@ export const INITIAL_SEED_DATA = {
       id: 'sys-concealed-barn',
       code: 'CB-808',
       name: 'Concealed Barn',
-      description: 'Pure magic mechanism: all rolling track gear is concealed entirely inside the milled door leaf.',
+      description: 'Invisible sliding mechanism milled entirely inside the top of the door slab.',
       capacity: '180 kg / 400 lbs',
       maxHeight: 'Zero Track Exposed',
-      frameType: 'Internal Milled Leaf Suspension',
-      svg: `<svg class="w-16 h-12 stroke-current fill-none stroke-[1.2]" viewBox="0 0 64 48">
+      frameType: 'Internal Milled Track',
+      svg: `<svg class="w-12 h-10 stroke-current fill-none stroke-[1.3]" viewBox="0 0 64 48">
         <rect fill="currentColor" fill-opacity="0.15" height="28" stroke-width="1.5" width="36" x="14" y="10"></rect>
         <line stroke-dasharray="3 2" stroke-width="1.5" x1="18" x2="46" y1="18" y2="18"></line>
         <circle cx="24" cy="18" fill="currentColor" r="2"></circle>
@@ -334,14 +371,14 @@ export const INITIAL_SEED_DATA = {
     {
       id: 'grp-villa-package',
       name: 'Villa Renovation Package',
-      description: 'Curated architectural door specification package for luxury residential estates.',
-      doorIds: ['door-pv-300', 'door-syl-001', 'door-lnr-404']
+      description: 'Curated flush door specification package for full residential projects.',
+      doorIds: ['door-pv-300', 'door-syl-001', 'door-lnr-404', 'door-ds-350']
     },
     {
       id: 'grp-penthouse-line',
       name: 'Penthouse Acoustic Suite',
-      description: 'Monolithic acoustic doors rated 42dB-46dB for high-profile master suites and studies.',
-      doorIds: ['door-cs-880', 'door-aur-992', 'door-pv-300']
+      description: 'High-attenuation acoustic doors rated 40dB–45dB for master suites and offices.',
+      doorIds: ['door-cs-880', 'door-aur-992', 'door-pv-300', 'door-bp-600']
     }
   ],
 
@@ -349,7 +386,7 @@ export const INITIAL_SEED_DATA = {
   promotions: [
     {
       id: 'promo-villa-bundle',
-      name: 'Villa Specification Incentive',
+      name: 'Villa Package Incentive',
       discountType: 'percentage',
       discountValue: 12,
       targetType: 'group',
@@ -360,7 +397,7 @@ export const INITIAL_SEED_DATA = {
     },
     {
       id: 'promo-concrete-rebate',
-      name: 'Engineered Stone Direct Allowance',
+      name: 'Stone Series Allowance',
       discountType: 'fixed',
       discountValue: 500,
       targetType: 'category',
@@ -371,7 +408,7 @@ export const INITIAL_SEED_DATA = {
     }
   ],
 
-  // 8. Relational Doors Catalog
+  // 8. Relational Doors Catalog (10 Models)
   doors: [
     {
       id: 'door-pv-300',
@@ -385,26 +422,26 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-villa-package', 'grp-penthouse-line'],
       tags: ['New Arrival'],
       isActive: true,
-      shortDescription: 'Smoked Fumed Oak veneer with sub-millimeter perimeter shadow line and 3-axis concealed pivot hardware.',
+      shortDescription: 'Smoked fumed oak veneer with zero-jamb reveal and 3-axis concealed pivot hardware.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkRn-7elj6NOepzHtzLZukL4dvCKZMgsnIpfztYT15ONO-hyZL1xYrHS6ixDSJ1Hy4Jlk2Qn3nwfdkzgQ5Fc4XpKEZMjBntcUGFI8fGaUQLt3iPLDc2xkDdLbgSxCOcmKfZf7naSB68Y2GCQsbwOFONYJ_mkTWc-dS8x8H7eeu1-log2tS3ITLBGrTKVOR-mYcl6xWDbB7GU3pL0xZAwDhKI95_bxz1Zy4r0hWIB3kFsQIFl-1P0-nJUdCvc6JR8f_PRVo_qGNmkU',
-          caption: 'Monolithic smoked fumed oak leaf flush with plaster reveal',
+          caption: 'Smoked fumed oak leaf flush with plaster reveal',
           isPrimary: true
         },
         {
           url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-          caption: 'Concealed German 3-axis pivot hinge detail',
+          caption: 'Concealed 3-axis pivot detail',
           isPrimary: false
         }
       ],
       specs: {
-        acoustic: '42dB Soundproof',
+        acoustic: '42dB',
         maxHeight: '3000mm',
         frame: 'Zero-Jamb Flush',
-        latches: 'Magnetic Silent Mortise',
+        latches: 'Magnetic Silent',
         coreMaterial: 'Acoustic Honeycomb & Solid Timber',
-        finishes: ['Smoked Fumed Oak', 'American Black Walnut', 'Primed for Plaster'],
+        finishes: ['Smoked Fumed Oak', 'American Walnut', 'Primed for Plaster'],
         fireRating: 'FD30 Compliant',
         leadTime: '6-8 Weeks'
       }
@@ -421,22 +458,22 @@ export const INITIAL_SEED_DATA = {
       groupIds: [],
       tags: ['New Arrival'],
       isActive: true,
-      shortDescription: 'Precision fluted acoustic laminated glass set within hand-finished Italian anodized black profiles.',
+      shortDescription: 'Fluted acoustic laminated glass enclosed in slim Italian anodized aluminum profiles.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD4rJGkT1rGqel4S09j30CdO59YfSsOSV2zpEumfc9CIuLs7gCBlo_Z6HJa5tjZpX9yMMeBU1TMb42YlttMpwypsHlt1KOI2Ux4wnas2k8icA_kZ_fcDe1Csi5OeB5MLIhVndsGo18APxND1eOVuc6gOO3XdveH-76NSZHd3OmCtH-XU02t7Kc2tY4XlVV1j0ILnGndqRwNnvN0-J7Z3TrP8y9XqAKtHqyP8r8V8e1SFuQBHSczT-T-tQUH7jQJZvf9f5Mescmz85c',
-          caption: 'Fluted reeded glass leaf with micro matte black anodized frame',
+          caption: 'Fluted glass leaf with slim matte profile',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '36dB Diffusion',
+        acoustic: '36dB',
         maxHeight: '3200mm',
-        frame: 'Slim Obsidian Aluminum',
+        frame: 'Slim Aluminum',
         latches: 'Magnetic Soft-Close',
-        coreMaterial: '12mm Acoustic Fluted Laminated Glass',
-        finishes: ['Obsidian Anodized Black', 'Brushed Bronze', 'Raw Silver Alu'],
-        fireRating: 'Non-combustible Glass',
+        coreMaterial: '12mm Fluted Laminated Glass',
+        finishes: ['Anodized Bronze', 'Matte Black', 'Brushed Champagne'],
+        fireRating: 'Non-combustible',
         leadTime: '7-9 Weeks'
       }
     },
@@ -452,22 +489,22 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-penthouse-line'],
       tags: ['New Arrival'],
       isActive: true,
-      shortDescription: 'Real micro-cement and board-formed veneer over lightweight aircraft-grade honeycomb aluminum core.',
+      shortDescription: 'Real micro-cement stone veneer bonded over a featherlight aluminum honeycomb core.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDty1mjJUsiJh0_mCtoMTSg5Jt5UkqymGORx-7iAuJc-nq4wKDh1iE76YXLik9XHAkt2OI0kmxrzC0_341TnPVQw24gD1Th4aWe2YBntWGnO_Btim6F8snILnCgtVxGfZA6_ZwsqwNddEAz9EUb_cy2D4PZU3CD2D1ioYlGOrmpVTiO2LEyc1bSZZ2xrqbb2pt_qpPiEKoq8Dgm0Yka2Dfi2FM1uD7PB5wpyK40F8NUMlDAhfkSjmoV9kjkY1UA0bWkP0HuI1LwEkk',
-          caption: 'Board-formed concrete sliding flush pocket door',
+          caption: 'Board-formed concrete flush pocket slider',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '44dB Lab Verified',
+        acoustic: '44dB',
         maxHeight: '3400mm',
-        frame: 'Plaster Flush Inset Cassette',
-        latches: 'Magnetic Touch Release',
-        coreMaterial: 'Honeycomb Aircraft Alu with 2mm Real Concrete',
-        finishes: ['Light Grey Board Concrete', 'Dark Basalt', 'Warm Travertine'],
-        fireRating: 'FD60 Rated Core',
+        frame: 'Flush Pocket Inset',
+        latches: 'Touch Release',
+        coreMaterial: 'Honeycomb Alu + 2mm Concrete',
+        finishes: ['Light Grey Concrete', 'Warm Travertine', 'Basalt'],
+        fireRating: 'FD60 Rated',
         leadTime: '8-10 Weeks'
       }
     },
@@ -483,20 +520,20 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-villa-package'],
       tags: ['Best Seller'],
       isActive: true,
-      shortDescription: 'Continuous ceiling-height European Walnut flush panel with concealed 3D adjustable TECTUS hinges and magnetic strike mortise.',
+      shortDescription: 'Ceiling-height European walnut flush panel with concealed TECTUS hinges and magnetic latch.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDQlCc-a_yLLj9dlqmzYSkyHDKXvqn3Ew1dc7w4PohjVtuXmV1gcXNnY7AcXgRvqTVihXtD3qlSdxPoM1YNj8TauMFNm1UC19mXnYDEKfR7LEYapjaN15sI11aZhX66a5UiH4RWBUvZp3bDDqHGroASF46kv7Lj1kjlYKSLRS5jGbShTxxtBK8fHRqI3HWv7LA1W8Yx5S-Gw2nAa0itWdl6s5QX5Sl5uVpyAt_sXfwvvRQXmWkE0iDtMHJ5rvBfkuRaeaadQPCH1-Q',
-          caption: 'Full-height European walnut door leaf flush with plaster wall',
+          caption: 'Full-height European walnut flush door',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '40dB Solid Core',
+        acoustic: '40dB',
         maxHeight: '3000mm',
-        frame: 'Sub-Millimeter Flush Extrusion',
-        latches: 'TECTUS 3D & Magnetic Strike',
-        coreMaterial: 'Solid Engineered Timber & Acoustic Core',
+        frame: 'Flush Extrusion',
+        latches: 'TECTUS 3D Magnetic',
+        coreMaterial: 'Solid Engineered Timber',
         finishes: ['European Walnut', 'Fumed Oak', 'Natural Ash'],
         fireRating: 'FD30 Optional',
         leadTime: '4-6 Weeks'
@@ -514,28 +551,28 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-penthouse-line'],
       tags: ['Best Seller'],
       isActive: true,
-      shortDescription: 'Oversized 11-foot fluted monolithic glass entrance leaf with hydraulic self-closing floor pivot and integrated recessed pull channel.',
+      shortDescription: '11-foot fluted glass pivot leaf with hydraulic self-closing floor spring and recessed pull.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCO08XwXE0aI6cfHeG7SnlxZe0xBf3KnjkqX6LoXHQAjiky8ifiV8CGbebibPPpR2Cp43TPNI8UIvLmdHzLZTJbKSbpfi6eiv5_Nlb0EJ5GMoX9NZquJDJE8SK8SC-PBYBwNadbmmGrlz3wgaJok6AadoV46TL2HRhmOs-sMXO3iXKW7VSfeLZ86DdD7GkgbJpZ3cN2dNb-IdX4oZQnd9DxHHkhJHn8ujGHhVvV8sg9gxgrhyptA7Q7KZurEfxG0M8LjG2FuADEuW4',
-          caption: '11-foot fluted architectural glass entrance pivot portal',
+          caption: 'Fluted glass pivot entrance portal',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '38dB Laminated Glass',
+        acoustic: '38dB',
         maxHeight: '3600mm',
-        frame: 'Heavy Duty Thermal Break Profile',
-        latches: 'Hydraulic In-Ground Pivot Self-Close',
-        coreMaterial: '14mm Reeded Acoustic Fluted Safety Glass',
-        finishes: ['Deep Obsidian Black', 'Champagne Bronze', 'Raw Satin Alu'],
-        fireRating: 'Class A Non-Combustible',
+        frame: 'Slim Thermal Profile',
+        latches: 'Hydraulic Floor Pivot',
+        coreMaterial: '14mm Reeded Safety Glass',
+        finishes: ['Champagne Gold', 'Anodized Bronze', 'Matte Black'],
+        fireRating: 'Class A Glass',
         leadTime: '8-10 Weeks'
       }
     },
     {
       id: 'door-lnr-404',
-      name: 'Linear Obsidian Pocket',
+      name: 'Linear Acoustic Pocket',
       slug: 'linear-obsidian-pocket',
       sku: 'LNR-404',
       basePrice: 3800,
@@ -545,21 +582,21 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-villa-package'],
       tags: ['Best Seller'],
       isActive: true,
-      shortDescription: 'Concealed motorized track pocket door system with soft-open deceleration, flush wall touch-release, and 45dB acoustic seals.',
+      shortDescription: 'Concealed soft-open pocket door system with flush wall touch-release and 45dB seals.',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB9lJr5OlnqZrAFVGqZsajKQhAZAMFwv2QEcJ8NJWMLNB17DpGY4AXi747poiwn8xwYPgVQRgHKue1rVDqptSC_sToljCD1c-SZW3w51lyCfWVRgoQiUnzv1-1Nt_lJxZrA0F98nMLqwOYWZUmv0Zcvw2cnC1CPk7EO6Zaz2cLbLEYaGbQ74e3euExhfLgGn9nLzUnFM0ZUco-nNDJcZq8Sh3S4MU9Am_vB5XKcBQMENFOStE-B5xcWWJdtWRPDFbNzbiXK5TTKoyY',
-          caption: 'Motorized acoustic pocket door flush with board-formed concrete wall',
+          caption: 'Flush acoustic pocket door',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '45dB Verified Seal',
+        acoustic: '45dB',
         maxHeight: '3200mm',
-        frame: 'Patented Cavity Cassette',
-        latches: 'Touch-Release & Motorized Drive',
-        coreMaterial: 'Multi-layer Acoustic Composite',
-        finishes: ['Smoked Obsidian Veneer', 'Venetian Plaster Primed', 'Natural Oak'],
+        frame: 'Cavity Cassette',
+        latches: 'Touch-Release',
+        coreMaterial: 'Multi-layer Acoustic Core',
+        finishes: ['Venetian Plaster Primed', 'Natural Oak', 'Smoked Veneer'],
         fireRating: 'FD30 Available',
         leadTime: '6-8 Weeks'
       }
@@ -576,21 +613,21 @@ export const INITIAL_SEED_DATA = {
       groupIds: [],
       tags: ['New Arrival'],
       isActive: true,
-      shortDescription: 'All rolling track hardware is precision-milled directly into the interior top edge of the leaf. Zero track visible on wall or ceiling.',
+      shortDescription: 'Rolling carriage milled invisibly into the top edge of the leaf with zero exposed wall rail.',
       images: [
         {
           url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-          caption: 'Concealed barn door leaf floating against drywall',
+          caption: 'Concealed barn leaf floating cleanly on wall',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '36dB Acoustic Leaf',
+        acoustic: '36dB',
         maxHeight: '3000mm',
-        frame: 'Internal Concealed Suspension Carriage',
-        latches: 'Integrated Soft Dampeners',
-        coreMaterial: 'Multi-ply Solid Wood with Aluminum Stabilizers',
-        finishes: ['Smoked Fumed Oak', 'American Walnut', 'Matte Lacquer'],
+        frame: 'Hidden Carriage',
+        latches: 'Soft Dampeners',
+        coreMaterial: 'Solid Wood + Alu Stabilizers',
+        finishes: ['Smoked Oak', 'American Walnut', 'Warm White Matte'],
         fireRating: 'FD30 Compatible',
         leadTime: '6-8 Weeks'
       }
@@ -607,21 +644,21 @@ export const INITIAL_SEED_DATA = {
       groupIds: [],
       tags: ['Best Seller'],
       isActive: true,
-      shortDescription: 'Expansive ceiling-hung folding leaf system with zero floor track reveal, allowing total spatial fluid unity when retracted.',
+      shortDescription: 'Ceiling-hung folding partition system with zero floor track for seamless room openings.',
       images: [
         {
           url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
-          caption: 'Flush folding architectural partitions',
+          caption: 'Flush folding partition',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '38dB Dual Seals',
+        acoustic: '38dB',
         maxHeight: '3200mm',
-        frame: 'Zero Floor Track - Overhead Carrier',
-        latches: 'Magnetic In-Line Leaf Latches',
-        coreMaterial: 'Hybrid Aluminum Frame with Wood or Reeded Glass',
-        finishes: ['Obsidian Black Aluminum', 'Natural Walnut', 'Fluted Glass'],
+        frame: 'Zero Floor Track',
+        latches: 'Magnetic In-Line',
+        coreMaterial: 'Aluminum & Wood/Glass',
+        finishes: ['Champagne Alu', 'Natural Walnut', 'Fluted Glass'],
         fireRating: 'Standard Interior',
         leadTime: '8-10 Weeks'
       }
@@ -638,59 +675,59 @@ export const INITIAL_SEED_DATA = {
       groupIds: ['grp-penthouse-line'],
       tags: ['New Arrival', 'Best Seller'],
       isActive: true,
-      shortDescription: 'Multi-leaf parallel sliding system with recessed ceiling track and synchronised soft-telescoping motion.',
+      shortDescription: 'Multi-leaf parallel sliding system with recessed ceiling track and synchronized soft glide.',
       images: [
         {
           url: 'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=1200&q=80',
-          caption: 'Parallel sliding telescopic architectural panels',
+          caption: 'Parallel sliding telescopic panels',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '40dB Multi-Panel Seals',
+        acoustic: '40dB',
         maxHeight: '3400mm',
-        frame: 'Recessed Ceiling Multi-Channel',
-        latches: 'Synchronized Soft-Open/Close',
-        coreMaterial: '12mm Reeded Acoustic Glass & Matte Aluminum',
-        finishes: ['Obsidian Black', 'Brushed Bronze', 'Smoked Glass'],
-        fireRating: 'Class A Non-combustible',
+        frame: 'Recessed Ceiling',
+        latches: 'Synchronized Glide',
+        coreMaterial: '12mm Reeded Glass & Alu',
+        finishes: ['Brushed Gold Bronze', 'Satin Black', 'Clear Reeded'],
+        fireRating: 'Class A',
         leadTime: '7-9 Weeks'
       }
     },
     {
       id: 'door-ds-350',
-      name: 'Monolith Double Swing Portal',
+      name: 'Double Swing Portal DS-350',
       slug: 'monolith-double-swing-portal',
       sku: 'DS-350',
       basePrice: 5400,
       brandId: 'brand-porta-de',
-      categoryIds: ['cat-flush-concealed', 'cat-monolithic-wood'],
+      categoryIds: ['cat-concrete-stone', 'cat-flush-concealed', 'cat-monolithic-wood'],
       mechanicalSystemId: 'sys-double-swing',
       groupIds: ['grp-villa-package'],
       tags: ['New Arrival', 'Best Seller'],
       isActive: true,
-      shortDescription: 'Monumental paired leaves with magnetic center rebate and sub-millimeter perimeter shadow reveals.',
+      shortDescription: 'Paired architectural leaves with magnetic center rebate and razor-thin shadow reveals.',
       images: [
         {
-          url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-          caption: 'Paired monolithic architectural double swing doors',
+          url: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80',
+          caption: 'Paired double swing architectural portal',
           isPrimary: true
         }
       ],
       specs: {
-        acoustic: '44dB Verified Solid Core',
+        acoustic: '44dB',
         maxHeight: '3200mm',
-        frame: 'Zero-Jamb Concealed Aluminum',
-        latches: 'Magnetic Center Rebate & Concealed 3D Hinges',
-        coreMaterial: 'Solid Engineered Timber Composite',
-        finishes: ['European Walnut', 'Fumed Oak', 'Primed for Plaster'],
+        frame: 'Zero-Jamb Concealed',
+        latches: 'Magnetic Center Rebate',
+        coreMaterial: 'Solid Timber Composite',
+        finishes: ['European Walnut', 'Travertine Stone', 'Primed'],
         fireRating: 'FD30 Available',
         leadTime: '6-8 Weeks'
       }
     }
   ],
 
-  // 9. Completed Architectural Projects (Case Studies)
+  // 9. Completed Architectural Projects
   projects: [
     {
       id: 'proj-malibu-01',
@@ -698,81 +735,81 @@ export const INITIAL_SEED_DATA = {
       slug: 'malibu-pavilion-residence',
       clientType: 'Architect',
       architectStudio: 'Olson Kundig Collaborators',
-      location: 'Malibu, California',
-      scale: '40 Flush Portals across 12,000 sq ft',
+      location: 'Malibu, CA',
+      scale: '40 Flush Portals • 12,000 sq ft',
       installedSystemIds: ['sys-double-pocket', 'sys-single-swing'],
       doorIds: ['door-pv-300', 'door-lnr-404'],
-      clientQuote: '“PORTA allowed us to eliminate every traditional door frame in the 12,000 sq ft residence. The shadow line consistency across 40 openings is unprecedented.”',
+      clientQuote: '“Eliminated every traditional door frame across 40 openings with uniform shadow-line precision.”',
       clientName: 'Lead Project Architect',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDEAcwYZPLp19NA5ESQnXo1Rj34c9SrDozzbV5hEaFinP1AJJoEyTUT8jFvOJycJenbhnBkZjds1s8zYoE_8B4mV124Uu7Pz8lZ2izfAZ7lDBrgaGpKiqrW1at9rzUJ9hva3rALudgtZSHAzWodBK1x3yp18CAXLNR2i2kV9_BOCUYyU8lg4_OiKzRA6smZiMHf4njLiWQNTR0eCRjs9k_ROzRzJHnnc60jK7pc_cTqQDZ65XsvZ_V0mY8cGMLSqfu7icAZh8Yg1EI',
-          caption: 'Expansive modern architectural pavilion with oversized entrance pivot door',
+          caption: 'Modern pavilion with oversized pivot portal',
           isPrimary: true
         }
       ]
     },
     {
       id: 'proj-zurich-02',
-      title: 'The Brutalist Villa',
+      title: 'Lakeview Minimalist Villa',
       slug: 'the-brutalist-villa',
       clientType: 'Designer',
       architectStudio: 'Studio Piet Boon Practice',
       location: 'Zurich, Switzerland',
-      scale: 'Exact Color & Texture Match to Cast Concrete Walls',
+      scale: '22 Stone-Faced Concealed Pivots',
       installedSystemIds: ['sys-single-swing', 'sys-single-pocket'],
       doorIds: ['door-cs-880'],
-      clientQuote: '“The tactile weight and dead-silent magnetic latching create a museum-like tranquility. Visitors cannot detect the door until it smoothly articulates.”',
+      clientQuote: '“Dead-silent magnetic latching and exact texture matching made every doorway blend into the wall.”',
       clientName: 'Studio Principal',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDqfRDPi0SXEJLm6ynljqxPx9yQNbsQjsyvDQ3nHWNFg_GoiJITaa14lZaxMSQ5zuF3FVKbhKQZDFPaepYT8Dv_z2MDK2CR9W4RgojqI9JisRta7peJKtgpttNKkSBpKRuIcKZ7RiMqBqbjD0DWPDxzwQiEluZS8iKUAp7rIuAL9YL5UshB_vAp_oQ9dBCUqWtbuTvsq_-Jg0WuQ5Pkxs1FyBs7eElLHRifORhdNIMIJM6yYYCTnin5YGCAO8OixQF95Sj4tskn39A',
-          caption: 'Monolithic flush pivot door clad in textured architectural concrete',
+          caption: 'Flush pivot door clad in stone veneer',
           isPrimary: true
         }
       ]
     },
     {
       id: 'proj-belair-03',
-      title: 'Bel Air Penthouse',
+      title: 'Bel Air Crest Penthouse',
       slug: 'bel-air-penthouse',
       clientType: 'Architect',
-      architectStudio: 'Tadao Ando Studio Practice',
-      location: 'Bel Air, California',
-      scale: '1.5mm Shadow Margins throughout 28 Flush Portals',
+      architectStudio: 'Ando Associates LA',
+      location: 'Bel Air, CA',
+      scale: '28 Smoked Oak Portals • 44dB Core',
       installedSystemIds: ['sys-single-swing', 'sys-concealed-barn'],
       doorIds: ['door-pv-300', 'door-syl-001'],
-      clientQuote: '“The precision of the jamb geometry allowed pure material planes of smoked fumed timber to float without compromise.”',
+      clientQuote: '“Pre-engineered aluminum subframes shaved weeks off drywall rough-in and delivered flawless reveals.”',
       clientName: 'Associate Director',
       images: [
         {
           url: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA-AWqpW4pTCt6-JSYhCjAZKqje0he2EJWxNqV3LOYsEX--sNiSzV8z89UrnfdzqSBkP5CjpjexWoeSJ0RjntbdyMe8HY9OQn4_vozqOzvb_x1r2vr3J0w7ja8ncznFwTSevOaVpWtXWvFPDo2BVCSAquQ_FYfAwKrDkqj5aJPh67V8K0fqTie5EG79ZHdW3lzP6Wv_h0SvbYDWLOSYsIWrPjWTLmIp_uciX31RimGoU-DynxrMJAqD8NabymaPPpL3_zqqbf1tdrU',
-          caption: 'Smoked fumed oak monolithic interior door set flush into polished grey plaster walls',
+          caption: 'Smoked fumed oak interior door flush with plaster wall',
           isPrimary: true
         }
       ]
     }
   ],
 
-  // 10. Peer Endorsements / Testimonials
+  // 10. Endorsements / Testimonials
   testimonials: [
     {
       id: 'test-01',
-      quote: '“In high-end residential architecture, a door frame is an admission of failure. PORTA allows us to carry continuous Venetian plaster planes through opening after opening with absolute zero distortion.”',
+      quote: '“Doors Gallery allowed us to carry continuous Venetian plaster planes room-to-room with zero visible casing.”',
       authorTitle: 'Senior Associate',
-      authorOrg: 'Foster + Partners New York'
+      authorOrg: 'Foster + Partners NY'
     },
     {
       id: 'test-02',
-      quote: '“The concealed acoustic drop-seal system delivered 45dB lab performance inside our private boardroom projects while remaining totally invisible. The machining quality is equal to Swiss watchmaking.”',
+      quote: '“The 45dB drop-seal acoustic performance in our private residences feels like Swiss watchmaking.”',
       authorTitle: 'Technical Director',
-      authorOrg: 'Boffi Projects & Interiors Milan'
+      authorOrg: 'Boffi Interiors Milan'
     },
     {
       id: 'test-03',
-      quote: '“Every custom pivot door we have ordered arrives with pre-hung sub-frames that shave weeks off general contractor rough-in times. The magnetic latch closure feel is utterly satisfying.”',
+      quote: '“Every custom pre-hung subframe arrived square to the millimeter, making contractor installation effortless.”',
       authorTitle: 'Founding Principal',
-      authorOrg: 'AD100 Architecture Practice Los Angeles'
+      authorOrg: 'AD100 Studio Los Angeles'
     }
   ],
 
@@ -780,12 +817,12 @@ export const INITIAL_SEED_DATA = {
   inquiries: [
     {
       id: 'INQ-7821',
-      createdAt: '2025-01-14T11:20:00Z',
+      createdAt: '2026-01-14T11:20:00Z',
       status: 'new',
       contactName: 'Elena Rostova, Rostova Architects',
       contactEmail: 'elena@rostova-arch.com',
       contactPhone: '+1 (310) 555-8921',
-      projectLocation: 'Aspen, Colorado',
+      projectLocation: 'Beverly Hills, CA',
       projectType: 'High-End Residential',
       openingsCount: '16 - 40 Estate / Commercial Floor',
       finishPreference: 'Smoked European Fumed Oak',
@@ -795,8 +832,8 @@ export const INITIAL_SEED_DATA = {
         { doorId: 'door-cs-880', doorName: 'Monolith Concrete Slider', sku: 'CS-880', quantity: 4, effectivePrice: 4600 }
       ],
       totalEstimate: 60904,
-      fileName: 'Aspen_Estate_Door_Schedule_v2.dwg',
-      notes: 'Need 3000mm full ceiling-height doors with 42dB acoustic core and zero-jamb flush plaster detail. Drawings attached.'
+      fileName: 'Beverly_Estate_Door_Schedule.dwg',
+      notes: 'Need 3000mm ceiling-height doors with 42dB acoustic core and zero-jamb plaster detail.'
     }
   ]
 };
